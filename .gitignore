@@ -1,0 +1,14 @@
+# Keep model files out of the frontend GitHub repo
+# (models are deployed separately to Hugging Face Spaces)
+backend/models/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# macOS
+.DS_Store

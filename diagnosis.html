@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assessment — NeuroVoice DX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Disclaimer Banner -->
+  <div class="disclaimer-banner">
+    <span class="disclaimer-icon">⚠</span>
+    For research and educational purposes only. Not a substitute for professional medical diagnosis.
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <div class="brand-dot"></div>
+        <a href="index.html" class="brand-name">NeuroVoice<span class="brand-dx">DX</span></a>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="diagnosis.html" class="nav-link active">Assessment</a>
+        <a href="index.html#models" class="nav-link">Models</a>
+        <a href="index.html#about" class="nav-link">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Wizard Header -->
+  <div class="wizard-header">
+    <div class="wizard-header-inner">
+      <h1>Multi-Modal Neurological Assessment</h1>
+      <p>Complete voice and drawing analyses to receive an AI-generated screening result.</p>
+    </div>
+  </div>
+
+  <!-- Step Progress -->
+  <div class="wizard-steps">
+    <div class="wizard-steps-inner">
+      <div class="wizard-step active" id="tab-voice" onclick="goToStep(1)">
+        <div class="step-num">1</div>
+        <div class="step-label">Voice Analysis</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="wizard-step" id="tab-drawing" onclick="goToStep(2)">
+        <div class="step-num">2</div>
+        <div class="step-label">Drawing Analysis</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="wizard-step" id="tab-results" onclick="goToStep(3)">
+        <div class="step-num">3</div>
+        <div class="step-label">Results</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wizard Body -->
+  <div class="wizard-body">
+
+    <!-- API Config -->
+    <div class="api-config">
+      <label>Backend URL:</label>
+      <input type="text" id="api-url" placeholder="https://your-space.hf.space" value="http://localhost:7860" />
+      <button class="btn-secondary" onclick="testConnection()">Test Connection</button>
+      <span class="api-status" id="api-status"></span>
+    </div>
+
+    <!-- ── Step 1: Voice ─────────────────────────────────────────────────── -->
+    <div class="wizard-section active" id="step-1">
+      <div class="section-heading">
+        <h2>🎙 Voice Analysis</h2>
+        <p>Upload three short voice recordings. Each is analyzed by a different model.</p>
+      </div>
+
+      <div class="instructions-box">
+        <strong>Recording Instructions</strong>
+        <b>AHH Vowel:</b> Sustain the vowel "ahhh" for 5–10 seconds at a comfortable pitch.<br />
+        <b>Text Reading:</b> Read a short paragraph aloud (e.g., "The North Wind and the Sun").<br />
+        <b>Vowels:</b> Repeat each vowel (a, e, i, o, u) slowly and clearly.
+      </div>
+
+      <div class="upload-grid">
+        <!-- AHH -->
+        <div class="upload-card" id="card-ahh">
+          <input type="file" accept="audio/*,.wav,.mp3,.m4a" onchange="handleVoiceUpload(this, 'ahh')" />
+          <div class="upload-icon">🎤</div>
+          <div class="upload-title">Sustained "AHH" Vowel</div>
+          <div class="upload-desc">Hold the vowel "ahhh" for 5–10 seconds. .wav recommended.</div>
+          <button class="upload-btn">Choose File</button>
+          <div class="upload-status" id="status-ahh"></div>
+          <div id="result-ahh"></div>
+        </div>
+
+        <!-- Text -->
+        <div class="upload-card" id="card-text">
+          <input type="file" accept="audio/*,.wav,.mp3,.m4a" onchange="handleVoiceUpload(this, 'text')" />
+          <div class="upload-icon">📖</div>
+          <div class="upload-title">Text Reading</div>
+          <div class="upload-desc">Read a short paragraph aloud. Natural, conversational pace.</div>
+          <button class="upload-btn">Choose File</button>
+          <div class="upload-status" id="status-text"></div>
+          <div id="result-text"></div>
+        </div>
+
+        <!-- Vowels -->
+        <div class="upload-card" id="card-vowels">
+          <input type="file" accept="audio/*,.wav,.mp3,.m4a" onchange="handleVoiceUpload(this, 'vowels')" />
+          <div class="upload-icon">🔊</div>
+          <div class="upload-title">Vowel Sounds</div>
+          <div class="upload-desc">Slowly say each vowel: a, e, i, o, u. Pause between each.</div>
+          <button class="upload-btn">Choose File</button>
+          <div class="upload-status" id="status-vowels"></div>
+          <div id="result-vowels"></div>
+        </div>
+      </div>
+
+      <div class="wizard-nav">
+        <div></div>
+        <button class="btn-primary" onclick="goToStep(2)">Next: Drawing Analysis →</button>
+      </div>
+    </div>
+
+    <!-- ── Step 2: Drawing ────────────────────────────────────────────────── -->
+    <div class="wizard-section" id="step-2">
+      <div class="section-heading">
+        <h2>✏️ Drawing Analysis</h2>
+        <p>Upload images of completed clinical drawing tasks.</p>
+      </div>
+
+      <div class="instructions-box">
+        <strong>Drawing Instructions</strong>
+        <b>Spiral:</b> Draw an Archimedean spiral starting from the center, without lifting the pen.<br />
+        <b>Meander:</b> Draw a repetitive zigzag meander pattern from left to right.<br />
+        <b>Wave:</b> Draw a sinusoidal wave across the page. Aim for uniform amplitude and spacing.<br />
+        <em>Scan or photograph your drawing against a plain white background and upload as JPG or PNG.</em>
+      </div>
+
+      <div class="upload-grid">
+        <!-- Meander -->
+        <div class="upload-card" id="card-meander">
+          <input type="file" accept="image/*,.jpg,.jpeg,.png" onchange="handleDrawingUpload(this, 'meander')" />
+          <div class="upload-icon">〰️</div>
+          <div class="upload-title">Meander Pattern</div>
+          <div class="upload-desc">Repetitive zigzag meander drawn continuously.</div>
+          <button class="upload-btn">Choose Image</button>
+          <div class="upload-status" id="status-meander"></div>
+          <div id="result-meander"></div>
+        </div>
+
+        <!-- Spiral 1 -->
+        <div class="upload-card" id="card-spiral1">
+          <input type="file" accept="image/*,.jpg,.jpeg,.png" onchange="handleDrawingUpload(this, 'spiral1')" />
+          <div class="upload-icon">🌀</div>
+          <div class="upload-title">Spiral Drawing — Set 1</div>
+          <div class="upload-desc">Archimedean spiral starting from center, drawn without lifting pen.</div>
+          <button class="upload-btn">Choose Image</button>
+          <div class="upload-status" id="status-spiral1"></div>
+          <div id="result-spiral1"></div>
+        </div>
+
+        <!-- Spiral 2 -->
+        <div class="upload-card" id="card-spiral2">
+          <input type="file" accept="image/*,.jpg,.jpeg,.png" onchange="handleDrawingUpload(this, 'spiral2')" />
+          <div class="upload-icon">🌀</div>
+          <div class="upload-title">Spiral Drawing — Set 2</div>
+          <div class="upload-desc">Second spiral drawing for additional model analysis.</div>
+          <button class="upload-btn">Choose Image</button>
+          <div class="upload-status" id="status-spiral2"></div>
+          <div id="result-spiral2"></div>
+        </div>
+
+        <!-- Wave -->
+        <div class="upload-card" id="card-wave">
+          <input type="file" accept="image/*,.jpg,.jpeg,.png" onchange="handleDrawingUpload(this, 'wave')" />
+          <div class="upload-icon">📈</div>
+          <div class="upload-title">Wave / Sinusoidal</div>
+          <div class="upload-desc">Sinusoidal wave drawn with uniform amplitude and spacing.</div>
+          <button class="upload-btn">Choose Image</button>
+          <div class="upload-status" id="status-wave"></div>
+          <div id="result-wave"></div>
+        </div>
+      </div>
+
+      <div class="wizard-nav">
+        <button class="btn-outline" onclick="goToStep(1)">← Back</button>
+        <button class="btn-primary" onclick="computeEnsembleAndShow()">View Results →</button>
+      </div>
+    </div>
+
+    <!-- ── Step 3: Results ────────────────────────────────────────────────── -->
+    <div class="wizard-section" id="step-3">
+      <div id="results-loading" style="text-align:center;padding:60px 0;display:none;">
+        <div class="spinner" style="width:40px;height:40px;border-width:4px;margin:0 auto 16px;"></div>
+        <p style="color:var(--gray-600);">Computing ensemble result…</p>
+      </div>
+
+      <div id="results-content" style="display:none;">
+        <!-- Ensemble Card -->
+        <div class="ensemble-card">
+          <div class="ensemble-title">Ensemble Diagnosis</div>
+          <div class="ensemble-prediction" id="ensemble-prediction">—</div>
+          <div id="confidence-badge" class="confidence-badge">—</div>
+
+          <div class="prob-bars">
+            <div class="prob-row">
+              <span class="prob-label HC">HC</span>
+              <div class="prob-bar-track"><div class="prob-bar-fill HC" id="bar-HC" style="width:0%"></div></div>
+              <span class="prob-pct" id="pct-HC">0%</span>
+            </div>
+            <div class="prob-row">
+              <span class="prob-label PD">PD</span>
+              <div class="prob-bar-track"><div class="prob-bar-fill PD" id="bar-PD" style="width:0%"></div></div>
+              <span class="prob-pct" id="pct-PD">0%</span>
+            </div>
+            <div class="prob-row">
+              <span class="prob-label PSP">PSP</span>
+              <div class="prob-bar-track"><div class="prob-bar-fill PSP" id="bar-PSP" style="width:0%"></div></div>
+              <span class="prob-pct" id="pct-PSP">0%</span>
+            </div>
+            <div class="prob-row">
+              <span class="prob-label MSA">MSA</span>
+              <div class="prob-bar-track"><div class="prob-bar-fill MSA" id="bar-MSA" style="width:0%"></div></div>
+              <span class="prob-pct" id="pct-MSA">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Per-model breakdown -->
+        <div class="result-card">
+          <div class="result-card-title">Per-Model Breakdown</div>
+          <div class="model-breakdown">
+            <table class="breakdown-table" id="breakdown-table">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Prediction</th>
+                  <th>HC</th>
+                  <th>PD</th>
+                  <th>PSP</th>
+                  <th>MSA</th>
+                </tr>
+              </thead>
+              <tbody id="breakdown-body">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="instructions-box" style="margin-top:24px;background:var(--orange-light);border-color:#fcd34d;">
+          <strong>⚕ Research Use Only</strong>
+          These results are generated by experimental AI models trained on research datasets. They have not been validated for clinical use and do not constitute a medical diagnosis. Consult a qualified neurologist for evaluation of any movement disorder.
+        </div>
+
+        <div class="wizard-nav">
+          <button class="btn-outline" onclick="goToStep(2)">← Revise Inputs</button>
+          <button class="btn-secondary" onclick="resetAll()">Start New Assessment</button>
+        </div>
+      </div>
+
+      <div id="results-error" style="display:none;text-align:center;padding:40px 0;">
+        <p style="color:var(--red);font-weight:600;margin-bottom:12px;">Could not compute results.</p>
+        <p style="color:var(--gray-600);font-size:14px;">Make sure the backend is running and at least one file was uploaded.</p>
+        <button class="btn-outline" style="margin-top:16px;" onclick="goToStep(1)">← Go Back</button>
+      </div>
+    </div>
+
+  </div><!-- /wizard-body -->
+
+  <script src="js/app.js"></script>
+</body>
+</html>
