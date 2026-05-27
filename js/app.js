@@ -1,6 +1,6 @@
 /**
- * NeuroVoice DX — Frontend Logic
- * Handles file uploads, API calls, and results rendering.
+ * NeuroTrace — Frontend Logic
+ * Handles file uploads, API calls, survey integration, and results rendering.
  */
 
 // ── State ─────────────────────────────────────────────────────────────────────
@@ -154,7 +154,7 @@ async function computeEnsembleAndShow() {
   contentEl.style.display  = 'none';
   errorEl.style.display    = 'none';
 
-  // Build payload — only send results that exist
+  // Build voice payload — only send results that exist
   const voicePayload = {};
   if (state.voice.vowels_4class)  voicePayload.vowels_4class  = state.voice.vowels_4class;
   if (state.voice.ahh_binary)     voicePayload.ahh_binary     = state.voice.ahh_binary;
@@ -166,24 +166,39 @@ async function computeEnsembleAndShow() {
     if (state.drawing[k]) drawingPayload[k] = state.drawing[k];
   });
 
-  if (Object.keys(voicePayload).length === 0 && Object.keys(drawingPayload).length === 0) {
+  // Read survey score from localStorage if available
+  let surveyPayload = null;
+  try {
+    const saved = localStorage.getItem('neurotrace_survey');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.completed && typeof parsed.score === 'number') {
+        surveyPayload = { score: parsed.score };
+      }
+    }
+  } catch (_) {}
+
+  if (Object.keys(voicePayload).length === 0 && Object.keys(drawingPayload).length === 0 && !surveyPayload) {
     loadingEl.style.display = 'none';
     errorEl.style.display   = 'block';
     return;
   }
 
   try {
+    const body = { voice: voicePayload, drawing: drawingPayload };
+    if (surveyPayload) body.survey = surveyPayload;
+
     const res = await fetch(`${getApiUrl()}/predict/ensemble`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ voice: voicePayload, drawing: drawingPayload }),
+      body: JSON.stringify(body),
       signal: AbortSignal.timeout(15000)
     });
     if (!res.ok) throw new Error(`Server error ${res.status}`);
     const data = await res.json();
 
     loadingEl.style.display = 'none';
-    renderResults(data.ensemble, voicePayload, drawingPayload);
+    renderResults(data.ensemble, voicePayload, drawingPayload, surveyPayload);
     contentEl.style.display = 'block';
 
   } catch (e) {
@@ -193,13 +208,13 @@ async function computeEnsembleAndShow() {
   }
 }
 
-function renderResults(ensemble, voiceData, drawingData) {
+function renderResults(ensemble, voiceData, drawingData, surveyData) {
   const { classes, probabilities, prediction, confidence } = ensemble;
 
   // Ensemble prediction
   const predEl = document.getElementById('ensemble-prediction');
   predEl.textContent = predictionLabel(prediction);
-  predEl.className = `ensemble-prediction ${prediction}`;
+  predEl.className = `nt-ensemble-pred ${prediction}`;
 
   // Confidence badge
   const badgeEl = document.getElementById('confidence-badge');
@@ -209,8 +224,10 @@ function renderResults(ensemble, voiceData, drawingData) {
   // Probability bars
   classes.forEach((cls, i) => {
     const pct = Math.round(probabilities[i] * 100);
-    document.getElementById(`bar-${cls}`).style.width  = pct + '%';
-    document.getElementById(`pct-${cls}`).textContent  = pct + '%';
+    const bar = document.getElementById(`bar-${cls}`);
+    const pctEl = document.getElementById(`pct-${cls}`);
+    if (bar) bar.style.width = pct + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
   });
 
   // Per-model breakdown table
@@ -218,14 +235,14 @@ function renderResults(ensemble, voiceData, drawingData) {
   tbody.innerHTML = '';
 
   const modelRows = [
-    { key: 'vowels_4class',  label: '4-Class Vowel (Voice)',     src: voiceData,   classes4: true },
-    { key: 'ahh_binary',     label: 'AHH Vowel — Binary (Voice)', src: voiceData,  classes4: false },
-    { key: 'text_binary',    label: 'Text Reading — Binary (Voice)', src: voiceData, classes4: false },
-    { key: 'vowels_binary',  label: 'Vowels — Binary (Voice)',   src: voiceData,   classes4: false },
-    { key: 'meander',        label: 'Meander Drawing',           src: drawingData, classes4: null },
-    { key: 'spiral1',        label: 'Spiral Drawing — Set 1',    src: drawingData, classes4: null },
-    { key: 'spiral2',        label: 'Spiral Drawing — Set 2',    src: drawingData, classes4: null },
-    { key: 'wave',           label: 'Wave Drawing',              src: drawingData, classes4: null },
+    { key: 'vowels_4class',  label: '4-Class Vowel (Voice)',        src: voiceData },
+    { key: 'ahh_binary',     label: 'AHH Vowel — Binary (Voice)',   src: voiceData },
+    { key: 'text_binary',    label: 'Text Reading — Binary (Voice)', src: voiceData },
+    { key: 'vowels_binary',  label: 'Vowels — Binary (Voice)',       src: voiceData },
+    { key: 'meander',        label: 'Meander Drawing',               src: drawingData },
+    { key: 'spiral1',        label: 'Spiral Drawing — Set 1',        src: drawingData },
+    { key: 'spiral2',        label: 'Spiral Drawing — Set 2',        src: drawingData },
+    { key: 'wave',           label: 'Wave Drawing',                  src: drawingData },
   ];
 
   let anyRow = false;
@@ -238,29 +255,49 @@ function renderResults(ensemble, voiceData, drawingData) {
     const cls   = result.classes || [];
     const pred  = result.prediction || '?';
 
-    // Build 4-class prob cells
     const cells = ['HC','PD','PSP','MSA'].map(c => {
       const idx = cls.indexOf(c);
       const val = idx >= 0 ? Math.round(probs[idx] * 100) : '—';
-      return `<td>${val}${val !== '—' ? '%' : ''}</td>`;
+      return `<td style="color:var(--text-muted)">${val}${val !== '—' ? '%' : ''}</td>`;
     }).join('');
 
     tbody.innerHTML += `
       <tr>
-        <td style="font-weight:500;color:var(--gray-800)">${label}</td>
+        <td style="font-weight:500;color:var(--navy)">${label}</td>
         <td><span class="prediction-chip ${pred}">${pred}</span></td>
         ${cells}
       </tr>`;
   });
 
+  // Survey row
+  if (surveyData) {
+    anyRow = true;
+    const pct = Math.round(surveyData.score * 100);
+    tbody.innerHTML += `
+      <tr>
+        <td style="font-weight:500;color:var(--navy)">Lifestyle Survey</td>
+        <td><span class="prediction-chip ${surveyData.score >= 0.5 ? 'PD' : 'HC'}">${surveyData.score >= 0.5 ? 'PD' : 'HC'}</span></td>
+        <td style="color:var(--text-muted)">${100 - pct}%</td>
+        <td style="color:var(--text-muted)">${pct}%</td>
+        <td style="color:var(--text-muted)">—</td>
+        <td style="color:var(--text-muted)">—</td>
+      </tr>`;
+  }
+
   if (!anyRow) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray-400);padding:20px;">No model results available.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-light);padding:20px;">No model results available.</td></tr>';
+  }
+
+  // Show survey indicator if survey was included
+  const surveyNote = document.getElementById('survey-included-note');
+  if (surveyNote) {
+    surveyNote.style.display = surveyData ? 'flex' : 'none';
   }
 }
 
 function predictionLabel(code) {
   const map = {
-    PD:  'Parkinson\'s Disease (PD)',
+    PD:  "Parkinson's Disease (PD)",
     HC:  'Healthy Control (HC)',
     PSP: 'Progressive Supranuclear Palsy (PSP)',
     MSA: 'Multiple System Atrophy (MSA)'
@@ -288,11 +325,29 @@ function resetAll() {
   goToStep(1);
 }
 
-// Auto-test connection on load
+// ── On load ───────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   const savedUrl = localStorage.getItem('neurovox_api_url');
-  if (savedUrl) document.getElementById('api-url').value = savedUrl;
-  document.getElementById('api-url').addEventListener('change', e => {
-    localStorage.setItem('neurovox_api_url', e.target.value);
-  });
+  if (savedUrl) {
+    const el = document.getElementById('api-url');
+    if (el) el.value = savedUrl;
+  }
+  const urlInput = document.getElementById('api-url');
+  if (urlInput) {
+    urlInput.addEventListener('change', e => {
+      localStorage.setItem('neurovox_api_url', e.target.value);
+    });
+  }
+
+  // Show survey badge on report step if survey is already done
+  try {
+    const saved = localStorage.getItem('neurotrace_survey');
+    if (saved) {
+      const { completed } = JSON.parse(saved);
+      if (completed) {
+        const badge = document.getElementById('survey-badge');
+        if (badge) badge.style.display = 'inline-flex';
+      }
+    }
+  } catch (_) {}
 });

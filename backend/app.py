@@ -35,22 +35,42 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Load models at startup ────────────────────────────────────────────────────
+# ── Load models at startup (graceful — skip missing files) ────────────────────
 MODELS_DIR = os.path.join(os.path.dirname(__file__), "models")
 
+def _load_joblib(filename):
+    path = os.path.join(MODELS_DIR, filename)
+    if not os.path.exists(path):
+        print(f"  [SKIP] {filename} not found — model will be unavailable.")
+        return None
+    print(f"  [OK]   Loading {filename}")
+    return joblib.load(path)
+
+def _load_keras(filename):
+    path = os.path.join(MODELS_DIR, filename)
+    if not os.path.exists(path):
+        print(f"  [SKIP] {filename} not found — model will be unavailable.")
+        return None
+    print(f"  [OK]   Loading {filename}")
+    return tf.keras.models.load_model(path)
+
 print("Loading voice models...")
-voice_ahh    = joblib.load(os.path.join(MODELS_DIR, "PD_vs_HC_AHH.joblib"))
-voice_text   = joblib.load(os.path.join(MODELS_DIR, "PD_vs_HC_text.joblib"))
-voice_vowels = joblib.load(os.path.join(MODELS_DIR, "PD_vs_HC_vowels.joblib"))
-voice_4class = joblib.load(os.path.join(MODELS_DIR, "Vowels_4class_HC_PD_PSP_MSA.joblib"))
+voice_ahh    = _load_joblib("PD_vs_HC_AHH.joblib")
+voice_text   = _load_joblib("PD_vs_HC_text.joblib")
+voice_vowels = _load_joblib("PD_vs_HC_vowels.joblib")
+voice_4class = _load_joblib("Vowels_4class_HC_PD_PSP_MSA.joblib")
 
 print("Loading drawing models...")
-model_meander  = tf.keras.models.load_model(os.path.join(MODELS_DIR, "MeanderModel_finetune_best.keras"))
-model_spiral1  = tf.keras.models.load_model(os.path.join(MODELS_DIR, "SpiralModel_1_finetune_best.keras"))
-model_spiral2  = tf.keras.models.load_model(os.path.join(MODELS_DIR, "SpiralModel_2_finetune_best.keras"))
-model_wave     = tf.keras.models.load_model(os.path.join(MODELS_DIR, "WaveModel_finetune_best.keras"))
+model_meander  = _load_keras("MeanderModel_finetune_best.keras")
+model_spiral1  = _load_keras("SpiralModel_1_finetune_best.keras")
+model_spiral2  = _load_keras("SpiralModel_2_finetune_best.keras")
+model_wave     = _load_keras("WaveModel_finetune_best.keras")
 
-print("All models loaded.")
+models_loaded = sum(1 for m in [
+    voice_ahh, voice_text, voice_vowels, voice_4class,
+    model_meander, model_spiral1, model_spiral2, model_wave
+] if m is not None)
+print(f"Startup complete. {models_loaded}/8 models loaded.")
 
 # Class label order
 CLASSES_4 = ["HC", "PD", "PSP", "MSA"]   # 4-class models
@@ -58,7 +78,7 @@ CLASSES_2 = ["HC", "PD"]                  # binary models
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
-def binary_to_4class(probs_2: list[float]) -> dict:
+def binary_to_4class(probs_2: list) -> dict:
     """Convert a binary [HC, PD] probability to a 4-class dict (PSP/MSA = 0)."""
     return {"HC": probs_2[0], "PD": probs_2[1], "PSP": 0.0, "MSA": 0.0}
 
@@ -91,7 +111,25 @@ def preprocess_image(file_bytes: bytes) -> np.ndarray:
 # ── Routes ────────────────────────────────────────────────────────────────────
 @app.get("/health")
 def health():
-    return {"status": "ok", "models_loaded": 8}
+    return {
+        "status": "ok",
+        "models_loaded": models_loaded,
+        "models": {
+            "voice_ahh":    voice_ahh    is not None,
+            "voice_text":   voice_text   is not None,
+            "voice_vowels": voice_vowels is not None,
+            "voice_4class": voice_4class is not None,
+            "meander":      model_meander  is not None,
+            "spiral1":      model_spiral1  is not None,
+            "spiral2":      model_spiral2  is not None,
+            "wave":         model_wave     is not None,
+        }
+    }
+
+@app.get("/status")
+def status():
+    """Alias for /health used by the stack page."""
+    return health()
 
 
 @app.post("/predict/voice")
@@ -117,16 +155,17 @@ async def predict_voice(
 
     results = {}
 
-    # 4-class model always runs
-    probs_4 = svm_predict_proba(voice_4class, features, 4)
-    results["vowels_4class"] = {
-        "classes": CLASSES_4,
-        "probabilities": probs_4.tolist(),
-        "prediction": CLASSES_4[int(probs_4.argmax())]
-    }
+    # 4-class model (always runs if available)
+    if voice_4class is not None:
+        probs_4 = svm_predict_proba(voice_4class, features, 4)
+        results["vowels_4class"] = {
+            "classes": CLASSES_4,
+            "probabilities": probs_4.tolist(),
+            "prediction": CLASSES_4[int(probs_4.argmax())]
+        }
 
-    # Binary models based on type
-    if recording_type in ("ahh", "all"):
+    # Binary models based on recording type
+    if recording_type in ("ahh", "all") and voice_ahh is not None:
         p = svm_predict_proba(voice_ahh, features, 2)
         results["ahh_binary"] = {
             "classes": CLASSES_2,
@@ -134,7 +173,7 @@ async def predict_voice(
             "prediction": CLASSES_2[int(p.argmax())]
         }
 
-    if recording_type in ("text", "all"):
+    if recording_type in ("text", "all") and voice_text is not None:
         p = svm_predict_proba(voice_text, features, 2)
         results["text_binary"] = {
             "classes": CLASSES_2,
@@ -142,13 +181,16 @@ async def predict_voice(
             "prediction": CLASSES_2[int(p.argmax())]
         }
 
-    if recording_type in ("vowels", "all"):
+    if recording_type in ("vowels", "all") and voice_vowels is not None:
         p = svm_predict_proba(voice_vowels, features, 2)
         results["vowels_binary"] = {
             "classes": CLASSES_2,
             "probabilities": p.tolist(),
             "prediction": CLASSES_2[int(p.argmax())]
         }
+
+    if not results:
+        raise HTTPException(status_code=503, detail="No voice models are currently loaded.")
 
     results["features"] = features.tolist()
     return results
@@ -160,12 +202,6 @@ async def predict_drawing(
     drawing_type: str = Form("spiral1")  # meander | spiral1 | spiral2 | wave
 ):
     """Accept an image file and run the appropriate Keras drawing model."""
-    img_bytes = await file.read()
-    try:
-        img_array = preprocess_image(img_bytes)
-    except Exception as e:
-        raise HTTPException(status_code=422, detail=f"Image processing failed: {e}")
-
     model_map = {
         "meander": model_meander,
         "spiral1": model_spiral1,
@@ -177,6 +213,15 @@ async def predict_drawing(
         raise HTTPException(status_code=400, detail=f"Unknown drawing_type: {drawing_type}")
 
     model = model_map[drawing_type]
+    if model is None:
+        raise HTTPException(status_code=503, detail=f"Model '{drawing_type}' is not loaded.")
+
+    img_bytes = await file.read()
+    try:
+        img_array = preprocess_image(img_bytes)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=f"Image processing failed: {e}")
+
     raw = model.predict(img_array, verbose=0)[0]
 
     # Normalize output to probabilities
@@ -207,12 +252,14 @@ async def predict_ensemble(payload: dict):
 
     Expected payload:
     {
-      "voice": { "vowels_4class": {...}, "ahh_binary": {...}, ... },
-      "drawing": { "meander": {...}, "spiral1": {...}, ... }
+      "voice":   { "vowels_4class": {...}, "ahh_binary": {...}, ... },
+      "drawing": { "meander": {...}, "spiral1": {...}, ... },
+      "survey":  { "score": 0.0-1.0 }   // optional
     }
     """
     voice_results   = payload.get("voice", {})
     drawing_results = payload.get("drawing", {})
+    survey_result   = payload.get("survey", None)
 
     # Accumulate weighted 4-class probability vectors
     weighted_sum = np.zeros(4)
@@ -231,10 +278,7 @@ async def predict_ensemble(payload: dict):
     for key in binary_voice_keys:
         if key in voice_results:
             p2 = np.array(voice_results[key]["probabilities"])
-            if len(p2) == 2:
-                p4 = np.array([p2[0], p2[1], 0.0, 0.0])
-            else:
-                p4 = p2
+            p4 = np.array([p2[0], p2[1], 0.0, 0.0]) if len(p2) == 2 else p2
             weighted_sum += per_binary * p4
             total_weight += per_binary
 
@@ -253,6 +297,15 @@ async def predict_ensemble(payload: dict):
             weighted_sum += per_drawing * p4
             total_weight += per_drawing
 
+    # Survey score — weight 0.25, interpreted as HC vs PD probability
+    if survey_result is not None:
+        score = float(survey_result.get("score", 0))
+        score = max(0.0, min(1.0, score))
+        # Convert survey PD risk score to [HC, PD, PSP=0, MSA=0] probability vector
+        survey_p4 = np.array([1.0 - score, score, 0.0, 0.0])
+        weighted_sum += 0.25 * survey_p4
+        total_weight += 0.25
+
     if total_weight == 0:
         raise HTTPException(status_code=400, detail="No model results provided.")
 
@@ -269,7 +322,8 @@ async def predict_ensemble(payload: dict):
             "probabilities": final_probs,
             "prediction": CLASSES_4[int(np.argmax(final_probs))],
             "confidence": confidence,
-            "models_used": int(round(total_weight / (0.35 / 1)))
+            "models_used": models_loaded,
+            "survey_included": survey_result is not None
         }
     }
 

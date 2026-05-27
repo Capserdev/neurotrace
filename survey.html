@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survey &mdash; NeuroTrace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .survey-category {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin: 32px 0 14px;
+    }
+    .survey-question {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 20px 22px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .survey-question.answered {
+      border-color: var(--green);
+    }
+    .sq-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--navy);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .sq-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .sq-option {
+      display: none;
+    }
+    .sq-label {
+      padding: 7px 14px;
+      border-radius: var(--r-full);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .sq-option:checked + .sq-label {
+      background: var(--navy-btn);
+      color: white;
+      border-color: var(--navy-btn);
+    }
+    .sq-label:hover {
+      border-color: var(--text-muted);
+      background: var(--bg-subtle);
+    }
+    .sq-option:checked + .sq-label:hover {
+      background: var(--navy-btn);
+    }
+
+    /* Progress bar */
+    .survey-progress {
+      background: var(--border-light);
+      border-radius: var(--r-full);
+      height: 4px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .survey-progress-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: var(--r-full);
+      transition: width 0.3s ease;
+    }
+
+    /* Result card */
+    .survey-result {
+      display: none;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 32px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      margin-top: 24px;
+    }
+    .sr-score-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .sr-score-num {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .sr-score-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+    .sr-risk-tag {
+      display: inline-block;
+      padding: 4px 16px;
+      border-radius: var(--r-full);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .sr-risk-tag.low      { background: var(--green-light);  color: var(--green); }
+    .sr-risk-tag.moderate { background: var(--orange-light); color: var(--orange); }
+    .sr-risk-tag.high     { background: var(--red-light);    color: var(--red); }
+    .sr-message {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 480px;
+      margin: 0 auto 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nt-nav">
+    <div class="nt-nav-inner">
+      <a href="index.html" class="nt-logo">
+        <div class="nt-logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <path d="M2 12c2-5 4-5 6 0s4 5 6 0 2-5 4-5"/>
+          </svg>
+        </div>
+        <div class="nt-logo-text">
+          <span class="nt-logo-name">NeuroTrace</span>
+          <span class="nt-logo-sub">AI.GOV</span>
+        </div>
+      </a>
+
+      <nav class="nt-tabs">
+        <a href="index.html"             class="nt-tab">OVERVIEW</a>
+        <a href="diagnosis.html#drawing" class="nt-tab">HANDWRITING</a>
+        <a href="diagnosis.html#voice"   class="nt-tab">VOICE</a>
+        <a href="survey.html"            class="nt-tab active">SURVEY</a>
+        <a href="diagnosis.html#results" class="nt-tab">REPORT</a>
+        <a href="science.html"           class="nt-tab">SCIENCE</a>
+        <a href="stack.html"             class="nt-tab">STACK</a>
+      </nav>
+
+      <div class="nt-nav-right">
+        <a href="science.html" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Read Our Paper
+        </a>
+        <a href="https://github.com/Capserdev/AI.Gov" target="_blank" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          See Our Website Code
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <section class="nt-section">
+    <div class="nt-container" style="max-width: 720px;">
+
+      <div class="nt-page-head">
+        <div class="nt-page-icon">&#128203;</div>
+        <h1>Lifestyle Assessment</h1>
+        <p>Clinically-validated questionnaire assessing motor symptoms, non-motor indicators, and risk factors.</p>
+      </div>
+
+      <!-- Progress -->
+      <div class="survey-progress">
+        <div class="survey-progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+
+      <div class="nt-instr-box">
+        <strong>Instructions</strong>
+        Answer each question as accurately as possible based on your experience over the past 3 months. This questionnaire is a research screening tool only and does not constitute a medical diagnosis.
+      </div>
+
+      <form id="survey-form" onsubmit="submitSurvey(event)">
+
+        <!-- Motor Symptoms -->
+        <div class="survey-category">Motor Symptoms</div>
+
+        <div class="survey-question" id="q-tremor">
+          <div class="sq-text">Do you experience involuntary shaking or tremor in your hands at rest?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="tremor" id="tremor-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="tremor-0">Never</label>
+            <input class="sq-option" type="radio" name="tremor" id="tremor-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="tremor-1">Rarely</label>
+            <input class="sq-option" type="radio" name="tremor" id="tremor-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="tremor-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="tremor" id="tremor-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="tremor-3">Often</label>
+            <input class="sq-option" type="radio" name="tremor" id="tremor-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="tremor-4">Always</label>
+          </div>
+        </div>
+
+        <div class="survey-question" id="q-handwriting">
+          <div class="sq-text">Has your handwriting become noticeably smaller or more cramped over time?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="handwriting" id="handwriting-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="handwriting-0">Never</label>
+            <input class="sq-option" type="radio" name="handwriting" id="handwriting-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="handwriting-1">Rarely</label>
+            <input class="sq-option" type="radio" name="handwriting" id="handwriting-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="handwriting-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="handwriting" id="handwriting-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="handwriting-3">Often</label>
+            <input class="sq-option" type="radio" name="handwriting" id="handwriting-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="handwriting-4">Always</label>
+          </div>
+        </div>
+
+        <div class="survey-question" id="q-voice_change">
+          <div class="sq-text">Have others told you your voice has become softer, hoarse, or monotone?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="voice_change" id="vc-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="vc-0">Never</label>
+            <input class="sq-option" type="radio" name="voice_change" id="vc-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="vc-1">Rarely</label>
+            <input class="sq-option" type="radio" name="voice_change" id="vc-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="vc-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="voice_change" id="vc-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="vc-3">Often</label>
+            <input class="sq-option" type="radio" name="voice_change" id="vc-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="vc-4">Always</label>
+          </div>
+        </div>
+
+        <div class="survey-question" id="q-balance">
+          <div class="sq-text">Do you experience difficulty with balance or a tendency to shuffle your feet?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="balance" id="bal-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="bal-0">Never</label>
+            <input class="sq-option" type="radio" name="balance" id="bal-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="bal-1">Rarely</label>
+            <input class="sq-option" type="radio" name="balance" id="bal-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="bal-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="balance" id="bal-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="bal-3">Often</label>
+            <input class="sq-option" type="radio" name="balance" id="bal-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="bal-4">Always</label>
+          </div>
+        </div>
+
+        <div class="survey-question" id="q-stiffness">
+          <div class="sq-text">Do you feel unusual stiffness in your limbs that does not go away with movement?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="stiffness" id="stiff-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="stiff-0">Never</label>
+            <input class="sq-option" type="radio" name="stiffness" id="stiff-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="stiff-1">Rarely</label>
+            <input class="sq-option" type="radio" name="stiffness" id="stiff-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="stiff-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="stiffness" id="stiff-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="stiff-3">Often</label>
+            <input class="sq-option" type="radio" name="stiffness" id="stiff-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="stiff-4">Always</label>
+          </div>
+        </div>
+
+        <!-- Non-Motor Symptoms -->
+        <div class="survey-category">Non-Motor Symptoms</div>
+
+        <div class="survey-question" id="q-smell">
+          <div class="sq-text">Have you noticed a reduced sense of smell or difficulty identifying common scents?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="smell" id="smell-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="smell-0">Never</label>
+            <input class="sq-option" type="radio" name="smell" id="smell-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="smell-1">Rarely</label>
+            <input class="sq-option" type="radio" name="smell" id="smell-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="smell-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="smell" id="smell-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="smell-3">Often</label>
+            <input class="sq-option" type="radio" name="smell" id="smell-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="smell-4">Always</label>
+          </div>
+        </div>
+
+        <div class="survey-question" id="q-sleep">
+          <div class="sq-text">Do you act out your dreams while sleeping (kicking, punching, or yelling during sleep)?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="sleep" id="sleep-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="sleep-0">Never</label>
+            <input class="sq-option" type="radio" name="sleep" id="sleep-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="sleep-1">Rarely</label>
+            <input class="sq-option" type="radio" name="sleep" id="sleep-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="sleep-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="sleep" id="sleep-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="sleep-3">Often</label>
+            <input class="sq-option" type="radio" name="sleep" id="sleep-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="sleep-4">Always</label>
+          </div>
+        </div>
+
+        <div class="survey-question" id="q-constipation">
+          <div class="sq-text">Do you experience chronic constipation without a clear dietary cause?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="constipation" id="const-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="const-0">Never</label>
+            <input class="sq-option" type="radio" name="constipation" id="const-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="const-1">Rarely</label>
+            <input class="sq-option" type="radio" name="constipation" id="const-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="const-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="constipation" id="const-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="const-3">Often</label>
+            <input class="sq-option" type="radio" name="constipation" id="const-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="const-4">Always</label>
+          </div>
+        </div>
+
+        <div class="survey-question" id="q-depression">
+          <div class="sq-text">Have you experienced persistent feelings of depression or anxiety that are new or worsening?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="depression" id="dep-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="dep-0">Never</label>
+            <input class="sq-option" type="radio" name="depression" id="dep-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="dep-1">Rarely</label>
+            <input class="sq-option" type="radio" name="depression" id="dep-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="dep-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="depression" id="dep-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="dep-3">Often</label>
+            <input class="sq-option" type="radio" name="depression" id="dep-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="dep-4">Always</label>
+          </div>
+        </div>
+
+        <div class="survey-question" id="q-dizziness">
+          <div class="sq-text">Do you feel dizzy or lightheaded when standing up quickly?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="dizziness" id="diz-0" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="diz-0">Never</label>
+            <input class="sq-option" type="radio" name="dizziness" id="diz-1" value="0.25" onchange="onAnswer()">
+            <label class="sq-label" for="diz-1">Rarely</label>
+            <input class="sq-option" type="radio" name="dizziness" id="diz-2" value="0.5" onchange="onAnswer()">
+            <label class="sq-label" for="diz-2">Sometimes</label>
+            <input class="sq-option" type="radio" name="dizziness" id="diz-3" value="0.75" onchange="onAnswer()">
+            <label class="sq-label" for="diz-3">Often</label>
+            <input class="sq-option" type="radio" name="dizziness" id="diz-4" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="diz-4">Always</label>
+          </div>
+        </div>
+
+        <!-- Risk Factors -->
+        <div class="survey-category">Risk Factors</div>
+
+        <div class="survey-question" id="q-family_history">
+          <div class="sq-text">Do you have a first-degree relative (parent, sibling) diagnosed with Parkinson's disease?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="family_history" id="fam-no" value="0" onchange="onAnswer()">
+            <label class="sq-label" for="fam-no">No</label>
+            <input class="sq-option" type="radio" name="family_history" id="fam-yes" value="1.0" onchange="onAnswer()">
+            <label class="sq-label" for="fam-yes">Yes</label>
+          </div>
+        </div>
+
+        <div class="survey-question" id="q-age">
+          <div class="sq-text">What is your age range?</div>
+          <div class="sq-options">
+            <input class="sq-option" type="radio" name="age" id="age-0" value="0.05" onchange="onAnswer()">
+            <label class="sq-label" for="age-0">Under 40</label>
+            <input class="sq-option" type="radio" name="age" id="age-1" value="0.15" onchange="onAnswer()">
+            <label class="sq-label" for="age-1">40&ndash;50</label>
+            <input class="sq-option" type="radio" name="age" id="age-2" value="0.35" onchange="onAnswer()">
+            <label class="sq-label" for="age-2">51&ndash;60</label>
+            <input class="sq-option" type="radio" name="age" id="age-3" value="0.60" onchange="onAnswer()">
+            <label class="sq-label" for="age-3">61&ndash;70</label>
+            <input class="sq-option" type="radio" name="age" id="age-4" value="0.80" onchange="onAnswer()">
+            <label class="sq-label" for="age-4">71&ndash;80</label>
+            <input class="sq-option" type="radio" name="age" id="age-5" value="0.95" onchange="onAnswer()">
+            <label class="sq-label" for="age-5">80+</label>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div style="margin-top: 32px; display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 1px solid var(--border);">
+          <span id="answered-count" style="font-size: 13px; color: var(--text-muted);">0 / 12 answered</span>
+          <button type="submit" class="nt-btn-primary" id="submit-btn" disabled>
+            Submit Survey &rarr;
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Result Card -->
+      <div class="survey-result" id="survey-result">
+        <div class="sr-score-circle" id="sr-circle">
+          <div class="sr-score-num" id="sr-score-num">—</div>
+          <div class="sr-score-label">Risk Score</div>
+        </div>
+        <div class="sr-risk-tag" id="sr-risk-tag">—</div>
+        <p class="sr-message" id="sr-message">—</p>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <a href="diagnosis.html" class="nt-btn-primary">View Full Report &rarr;</a>
+          <button class="nt-btn-ghost" onclick="resetSurvey()">Retake Survey</button>
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div style="margin-top: 32px;">
+        <div class="nt-disclaimer-box">
+          <span class="nt-disclaimer-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </span>
+          <p><strong>Medical Disclaimer:</strong> This questionnaire is a research screening tool only. Results are not a medical diagnosis. Always consult a qualified healthcare professional regarding any symptoms.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="nt-footer">
+    <p>Conceptualized and developed in the United States &#127482;&#127480;</p>
+  </footer>
+
+  <script>
+    // ── Question weights (matching survey_engine.py) ───────────────────────────
+    const WEIGHTS = {
+      tremor:         1.0,
+      handwriting:    0.9,
+      voice_change:   0.85,
+      balance:        0.9,
+      stiffness:      0.85,
+      smell:          0.7,
+      sleep:          0.8,
+      constipation:   0.5,
+      depression:     0.5,
+      dizziness:      0.45,
+      family_history: 0.7,
+      age:            0.6
+    };
+    const TOTAL_QUESTIONS = Object.keys(WEIGHTS).length;
+
+    // ── Track answered questions and update progress ───────────────────────────
+    function onAnswer() {
+      const form = document.getElementById('survey-form');
+      let answered = 0;
+
+      Object.keys(WEIGHTS).forEach(name => {
+        const checked = form.querySelector(`input[name="${name}"]:checked`);
+        const qCard   = document.getElementById(`q-${name}`);
+        if (checked) {
+          answered++;
+          if (qCard) qCard.classList.add('answered');
+        } else {
+          if (qCard) qCard.classList.remove('answered');
+        }
+      });
+
+      const pct = Math.round((answered / TOTAL_QUESTIONS) * 100);
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('answered-count').textContent = `${answered} / ${TOTAL_QUESTIONS} answered`;
+      document.getElementById('submit-btn').disabled = answered < TOTAL_QUESTIONS;
+    }
+
+    // ── Compute score ──────────────────────────────────────────────────────────
+    function computeScore(form) {
+      let weightedSum = 0;
+      let totalWeight = 0;
+
+      Object.entries(WEIGHTS).forEach(([name, weight]) => {
+        const checked = form.querySelector(`input[name="${name}"]:checked`);
+        if (checked) {
+          weightedSum += parseFloat(checked.value) * weight;
+          totalWeight += weight;
+        }
+      });
+
+      return totalWeight > 0 ? weightedSum / totalWeight : 0;
+    }
+
+    // ── Submit ─────────────────────────────────────────────────────────────────
+    function submitSurvey(event) {
+      event.preventDefault();
+      const form   = document.getElementById('survey-form');
+      const score  = computeScore(form);
+      const pct    = Math.round(score * 100);
+
+      // Persist to localStorage for the report page
+      localStorage.setItem('neurotrace_survey', JSON.stringify({
+        score,
+        completed: true,
+        timestamp: Date.now()
+      }));
+
+      // Determine risk label
+      let risk, message;
+      if (score < 0.30) {
+        risk = 'Low Risk';
+        message = 'Your responses suggest a low likelihood of Parkinson\'s-related symptoms. Continue monitoring any changes and discuss with your doctor at your next routine visit.';
+      } else if (score < 0.60) {
+        risk = 'Moderate Risk';
+        message = 'Your responses indicate some symptoms that may warrant further evaluation. We recommend completing the voice and handwriting assessments and discussing results with a neurologist.';
+      } else {
+        risk = 'Elevated Risk';
+        message = 'Your responses indicate several symptoms associated with movement disorders. Please complete the full assessment and consult a qualified neurologist as soon as possible.';
+      }
+
+      // Show result
+      form.style.display = 'none';
+      const result = document.getElementById('survey-result');
+      result.style.display = 'block';
+
+      const circle  = document.getElementById('sr-circle');
+      const numEl   = document.getElementById('sr-score-num');
+      const tagEl   = document.getElementById('sr-risk-tag');
+      const msgEl   = document.getElementById('sr-message');
+
+      numEl.textContent = pct + '%';
+
+      const riskClass = score < 0.30 ? 'low' : score < 0.60 ? 'moderate' : 'high';
+      const circleColor = score < 0.30 ? 'var(--green)' : score < 0.60 ? 'var(--orange)' : 'var(--red)';
+      circle.style.borderColor = circleColor;
+      numEl.style.color = circleColor;
+
+      tagEl.textContent = risk;
+      tagEl.className   = `sr-risk-tag ${riskClass}`;
+      msgEl.textContent = message;
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Reset ──────────────────────────────────────────────────────────────────
+    function resetSurvey() {
+      document.getElementById('survey-form').reset();
+      document.getElementById('survey-form').style.display = 'block';
+      document.getElementById('survey-result').style.display = 'none';
+      document.getElementById('progress-fill').style.width = '0%';
+      document.getElementById('answered-count').textContent = '0 / 12 answered';
+      document.getElementById('submit-btn').disabled = true;
+      document.querySelectorAll('.survey-question').forEach(q => q.classList.remove('answered'));
+      localStorage.removeItem('neurotrace_survey');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Restore if already completed ──────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('neurotrace_survey');
+      if (saved) {
+        try {
+          const { score, completed } = JSON.parse(saved);
+          if (completed) {
+            // Show a "retake" option without auto-submitting
+            document.getElementById('answered-count').textContent =
+              'Survey previously completed — retake to update.';
+          }
+        } catch (_) {}
+      }
+    });
+  </script>
+
+</body>
+</html>

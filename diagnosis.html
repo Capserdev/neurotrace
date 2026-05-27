@@ -3,95 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Assessment — NeuroVoice DX</title>
+  <title>Assessment &mdash; NeuroTrace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <!-- Disclaimer Banner -->
-  <div class="disclaimer-banner">
-    <span class="disclaimer-icon">⚠</span>
-    For research and educational purposes only. Not a substitute for professional medical diagnosis.
-  </div>
+  <!-- Navigation -->
+  <nav class="nt-nav">
+    <div class="nt-nav-inner">
+      <a href="index.html" class="nt-logo">
+        <div class="nt-logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <path d="M2 12c2-5 4-5 6 0s4 5 6 0 2-5 4-5"/>
+          </svg>
+        </div>
+        <div class="nt-logo-text">
+          <span class="nt-logo-name">NeuroTrace</span>
+          <span class="nt-logo-sub">AI.GOV</span>
+        </div>
+      </a>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <div class="nav-brand">
-        <div class="brand-dot"></div>
-        <a href="index.html" class="brand-name">NeuroVoice<span class="brand-dx">DX</span></a>
-      </div>
-      <div class="nav-links">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="diagnosis.html" class="nav-link active">Assessment</a>
-        <a href="index.html#models" class="nav-link">Models</a>
-        <a href="index.html#about" class="nav-link">About</a>
+      <nav class="nt-tabs">
+        <a href="index.html"      class="nt-tab">OVERVIEW</a>
+        <a href="#drawing"        class="nt-tab" id="nav-drawing">HANDWRITING</a>
+        <a href="#voice"          class="nt-tab" id="nav-voice">VOICE</a>
+        <a href="survey.html"     class="nt-tab" id="nav-survey">SURVEY</a>
+        <a href="#results"        class="nt-tab active" id="nav-report">REPORT</a>
+        <a href="science.html"    class="nt-tab">SCIENCE</a>
+        <a href="stack.html"      class="nt-tab">STACK</a>
+      </nav>
+
+      <div class="nt-nav-right">
+        <a href="science.html" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Read Our Paper
+        </a>
+        <a href="https://github.com/Capserdev/AI.Gov" target="_blank" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          See Our Website Code
+        </a>
       </div>
     </div>
   </nav>
 
-  <!-- Wizard Header -->
-  <div class="wizard-header">
-    <div class="wizard-header-inner">
-      <h1>Multi-Modal Neurological Assessment</h1>
-      <p>Complete voice and drawing analyses to receive an AI-generated screening result.</p>
-    </div>
-  </div>
-
-  <!-- Step Progress -->
-  <div class="wizard-steps">
-    <div class="wizard-steps-inner">
-      <div class="wizard-step active" id="tab-voice" onclick="goToStep(1)">
-        <div class="step-num">1</div>
-        <div class="step-label">Voice Analysis</div>
+  <!-- Step Navigation -->
+  <div class="nt-step-nav">
+    <div class="nt-step-nav-inner">
+      <div class="nt-step-tab active" id="tab-voice" onclick="goToStep(1)">
+        <div class="nt-step-circle">1</div>
+        Voice Analysis
       </div>
-      <div class="step-connector"></div>
-      <div class="wizard-step" id="tab-drawing" onclick="goToStep(2)">
-        <div class="step-num">2</div>
-        <div class="step-label">Drawing Analysis</div>
+      <div class="nt-step-tab" id="tab-drawing" onclick="goToStep(2)">
+        <div class="nt-step-circle">2</div>
+        Drawing Analysis
       </div>
-      <div class="step-connector"></div>
-      <div class="wizard-step" id="tab-results" onclick="goToStep(3)">
-        <div class="step-num">3</div>
-        <div class="step-label">Results</div>
+      <div class="nt-step-tab" id="tab-results" onclick="goToStep(3)">
+        <div class="nt-step-circle">3</div>
+        Report
       </div>
     </div>
   </div>
 
   <!-- Wizard Body -->
-  <div class="wizard-body">
+  <div class="nt-wizard-body">
 
     <!-- API Config -->
-    <div class="api-config">
+    <div class="nt-api-config">
       <label>Backend URL:</label>
       <input type="text" id="api-url" placeholder="https://your-space.hf.space" value="http://localhost:7860" />
-      <button class="btn-secondary" onclick="testConnection()">Test Connection</button>
+      <button class="nt-btn-ghost" onclick="testConnection()">Test Connection</button>
       <span class="api-status" id="api-status"></span>
     </div>
 
     <!-- ── Step 1: Voice ─────────────────────────────────────────────────── -->
-    <div class="wizard-section active" id="step-1">
-      <div class="section-heading">
-        <h2>🎙 Voice Analysis</h2>
+    <div class="nt-wizard-section active" id="step-1">
+      <div class="nt-sec-head" id="voice">
+        <h2>Voice Analysis</h2>
         <p>Upload three short voice recordings. Each is analyzed by a different model.</p>
       </div>
 
-      <div class="instructions-box">
+      <div class="nt-instr-box">
         <strong>Recording Instructions</strong>
-        <b>AHH Vowel:</b> Sustain the vowel "ahhh" for 5–10 seconds at a comfortable pitch.<br />
-        <b>Text Reading:</b> Read a short paragraph aloud (e.g., "The North Wind and the Sun").<br />
+        <b>AHH Vowel:</b> Sustain the vowel "ahhh" for 5&ndash;10 seconds at a comfortable pitch.&nbsp;
+        <b>Text Reading:</b> Read a short paragraph aloud (e.g., "The North Wind and the Sun").&nbsp;
         <b>Vowels:</b> Repeat each vowel (a, e, i, o, u) slowly and clearly.
       </div>
 
-      <div class="upload-grid">
+      <div class="nt-upload-grid">
         <!-- AHH -->
         <div class="upload-card" id="card-ahh">
           <input type="file" accept="audio/*,.wav,.mp3,.m4a" onchange="handleVoiceUpload(this, 'ahh')" />
-          <div class="upload-icon">🎤</div>
+          <div class="upload-icon">&#127908;</div>
           <div class="upload-title">Sustained "AHH" Vowel</div>
-          <div class="upload-desc">Hold the vowel "ahhh" for 5–10 seconds. .wav recommended.</div>
+          <div class="upload-desc">Hold the vowel "ahhh" for 5&ndash;10 seconds. .wav recommended.</div>
           <button class="upload-btn">Choose File</button>
           <div class="upload-status" id="status-ahh"></div>
           <div id="result-ahh"></div>
@@ -100,7 +106,7 @@
         <!-- Text -->
         <div class="upload-card" id="card-text">
           <input type="file" accept="audio/*,.wav,.mp3,.m4a" onchange="handleVoiceUpload(this, 'text')" />
-          <div class="upload-icon">📖</div>
+          <div class="upload-icon">&#128214;</div>
           <div class="upload-title">Text Reading</div>
           <div class="upload-desc">Read a short paragraph aloud. Natural, conversational pace.</div>
           <button class="upload-btn">Choose File</button>
@@ -111,7 +117,7 @@
         <!-- Vowels -->
         <div class="upload-card" id="card-vowels">
           <input type="file" accept="audio/*,.wav,.mp3,.m4a" onchange="handleVoiceUpload(this, 'vowels')" />
-          <div class="upload-icon">🔊</div>
+          <div class="upload-icon">&#128266;</div>
           <div class="upload-title">Vowel Sounds</div>
           <div class="upload-desc">Slowly say each vowel: a, e, i, o, u. Pause between each.</div>
           <button class="upload-btn">Choose File</button>
@@ -120,28 +126,28 @@
         </div>
       </div>
 
-      <div class="wizard-nav">
+      <div class="nt-wiz-nav">
         <div></div>
-        <button class="btn-primary" onclick="goToStep(2)">Next: Drawing Analysis →</button>
+        <button class="nt-btn-primary" onclick="goToStep(2)">Next: Drawing Analysis &rarr;</button>
       </div>
     </div>
 
     <!-- ── Step 2: Drawing ────────────────────────────────────────────────── -->
-    <div class="wizard-section" id="step-2">
-      <div class="section-heading">
-        <h2>✏️ Drawing Analysis</h2>
+    <div class="nt-wizard-section" id="step-2">
+      <div class="nt-sec-head" id="drawing">
+        <h2>Drawing Analysis</h2>
         <p>Upload images of completed clinical drawing tasks.</p>
       </div>
 
-      <div class="instructions-box">
+      <div class="nt-instr-box">
         <strong>Drawing Instructions</strong>
-        <b>Spiral:</b> Draw an Archimedean spiral starting from the center, without lifting the pen.<br />
-        <b>Meander:</b> Draw a repetitive zigzag meander pattern from left to right.<br />
+        <b>Spiral:</b> Draw an Archimedean spiral starting from the center, without lifting the pen.&nbsp;
+        <b>Meander:</b> Draw a repetitive zigzag meander pattern from left to right.&nbsp;
         <b>Wave:</b> Draw a sinusoidal wave across the page. Aim for uniform amplitude and spacing.<br />
         <em>Scan or photograph your drawing against a plain white background and upload as JPG or PNG.</em>
       </div>
 
-      <div class="upload-grid">
+      <div class="nt-upload-grid">
         <!-- Meander -->
         <div class="upload-card" id="card-meander">
           <input type="file" accept="image/*,.jpg,.jpeg,.png" onchange="handleDrawingUpload(this, 'meander')" />
@@ -156,8 +162,8 @@
         <!-- Spiral 1 -->
         <div class="upload-card" id="card-spiral1">
           <input type="file" accept="image/*,.jpg,.jpeg,.png" onchange="handleDrawingUpload(this, 'spiral1')" />
-          <div class="upload-icon">🌀</div>
-          <div class="upload-title">Spiral Drawing — Set 1</div>
+          <div class="upload-icon">&#127744;</div>
+          <div class="upload-title">Spiral Drawing &mdash; Set 1</div>
           <div class="upload-desc">Archimedean spiral starting from center, drawn without lifting pen.</div>
           <button class="upload-btn">Choose Image</button>
           <div class="upload-status" id="status-spiral1"></div>
@@ -167,8 +173,8 @@
         <!-- Spiral 2 -->
         <div class="upload-card" id="card-spiral2">
           <input type="file" accept="image/*,.jpg,.jpeg,.png" onchange="handleDrawingUpload(this, 'spiral2')" />
-          <div class="upload-icon">🌀</div>
-          <div class="upload-title">Spiral Drawing — Set 2</div>
+          <div class="upload-icon">&#127744;</div>
+          <div class="upload-title">Spiral Drawing &mdash; Set 2</div>
           <div class="upload-desc">Second spiral drawing for additional model analysis.</div>
           <button class="upload-btn">Choose Image</button>
           <div class="upload-status" id="status-spiral2"></div>
@@ -178,7 +184,7 @@
         <!-- Wave -->
         <div class="upload-card" id="card-wave">
           <input type="file" accept="image/*,.jpg,.jpeg,.png" onchange="handleDrawingUpload(this, 'wave')" />
-          <div class="upload-icon">📈</div>
+          <div class="upload-icon">&#128200;</div>
           <div class="upload-title">Wave / Sinusoidal</div>
           <div class="upload-desc">Sinusoidal wave drawn with uniform amplitude and spacing.</div>
           <button class="upload-btn">Choose Image</button>
@@ -187,25 +193,36 @@
         </div>
       </div>
 
-      <div class="wizard-nav">
-        <button class="btn-outline" onclick="goToStep(1)">← Back</button>
-        <button class="btn-primary" onclick="computeEnsembleAndShow()">View Results →</button>
+      <div class="nt-wiz-nav">
+        <button class="nt-btn-ghost" onclick="goToStep(1)">&larr; Back</button>
+        <button class="nt-btn-primary" onclick="computeEnsembleAndShow()">View Report &rarr;</button>
       </div>
     </div>
 
     <!-- ── Step 3: Results ────────────────────────────────────────────────── -->
-    <div class="wizard-section" id="step-3">
-      <div id="results-loading" style="text-align:center;padding:60px 0;display:none;">
-        <div class="spinner" style="width:40px;height:40px;border-width:4px;margin:0 auto 16px;"></div>
-        <p style="color:var(--gray-600);">Computing ensemble result…</p>
+    <div class="nt-wizard-section" id="step-3">
+
+      <div id="results-loading" style="text-align:center; padding:60px 0; display:none;">
+        <div class="spinner" style="width:36px; height:36px; border-width:3px; margin:0 auto 16px;"></div>
+        <p style="color:var(--text-muted); font-size:14px;">Computing ensemble result&hellip;</p>
       </div>
 
-      <div id="results-content" style="display:none;">
-        <!-- Ensemble Card -->
-        <div class="ensemble-card">
-          <div class="ensemble-title">Ensemble Diagnosis</div>
-          <div class="ensemble-prediction" id="ensemble-prediction">—</div>
-          <div id="confidence-badge" class="confidence-badge">—</div>
+      <div id="results-content" style="display:none;" id="results">
+        <div class="nt-sec-head">
+          <h2>My Report</h2>
+          <p>Unified risk assessment combining all diagnostic modalities.</p>
+        </div>
+        <div id="survey-included-note" style="display:none; align-items:center; gap:8px; margin-bottom:20px; font-size:12px; color:var(--green); background:var(--green-light); border:1px solid #a7f3d0; border-radius:var(--r); padding:8px 14px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Survey results included in this report.
+          <a href="survey.html" style="color:var(--green); font-weight:600; text-decoration:underline; margin-left:4px;">Retake survey</a>
+        </div>
+
+        <!-- Ensemble card -->
+        <div class="nt-ensemble">
+          <div class="nt-ensemble-title">Ensemble Diagnosis</div>
+          <div class="nt-ensemble-pred" id="ensemble-prediction">&mdash;</div>
+          <div id="confidence-badge" class="confidence-badge">&mdash;</div>
 
           <div class="prob-bars">
             <div class="prob-row">
@@ -232,8 +249,8 @@
         </div>
 
         <!-- Per-model breakdown -->
-        <div class="result-card">
-          <div class="result-card-title">Per-Model Breakdown</div>
+        <div class="nt-result-card">
+          <div class="nt-result-card-title">Per-Model Breakdown</div>
           <div class="model-breakdown">
             <table class="breakdown-table" id="breakdown-table">
               <thead>
@@ -246,32 +263,40 @@
                   <th>MSA</th>
                 </tr>
               </thead>
-              <tbody id="breakdown-body">
-              </tbody>
+              <tbody id="breakdown-body"></tbody>
             </table>
           </div>
         </div>
 
         <!-- Disclaimer -->
-        <div class="instructions-box" style="margin-top:24px;background:var(--orange-light);border-color:#fcd34d;">
-          <strong>⚕ Research Use Only</strong>
-          These results are generated by experimental AI models trained on research datasets. They have not been validated for clinical use and do not constitute a medical diagnosis. Consult a qualified neurologist for evaluation of any movement disorder.
+        <div style="margin-top: 20px;">
+          <div class="nt-disclaimer-box">
+            <span class="nt-disclaimer-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </span>
+            <p><strong>Medical Disclaimer:</strong> NeuroTrace is a research screening tool and is not a substitute for professional medical diagnosis. Results should be discussed with a qualified healthcare provider.</p>
+          </div>
         </div>
 
-        <div class="wizard-nav">
-          <button class="btn-outline" onclick="goToStep(2)">← Revise Inputs</button>
-          <button class="btn-secondary" onclick="resetAll()">Start New Assessment</button>
+        <div class="nt-wiz-nav">
+          <button class="nt-btn-ghost" onclick="goToStep(2)">&larr; Revise Inputs</button>
+          <button class="nt-btn-ghost" onclick="resetAll()">Start New Assessment</button>
         </div>
       </div>
 
-      <div id="results-error" style="display:none;text-align:center;padding:40px 0;">
-        <p style="color:var(--red);font-weight:600;margin-bottom:12px;">Could not compute results.</p>
-        <p style="color:var(--gray-600);font-size:14px;">Make sure the backend is running and at least one file was uploaded.</p>
-        <button class="btn-outline" style="margin-top:16px;" onclick="goToStep(1)">← Go Back</button>
+      <div id="results-error" style="display:none; text-align:center; padding:48px 0;">
+        <p style="color:var(--red); font-weight:600; margin-bottom:10px;">Could not compute results.</p>
+        <p style="color:var(--text-muted); font-size:13px;">Make sure the backend is running and at least one file was uploaded.</p>
+        <button class="nt-btn-ghost" style="margin-top:16px;" onclick="goToStep(1)">&larr; Go Back</button>
       </div>
     </div>
 
   </div><!-- /wizard-body -->
+
+  <!-- Footer -->
+  <footer class="nt-footer">
+    <p>Conceptualized and developed in the United States &#127482;&#127480;</p>
+  </footer>
 
   <script src="js/app.js"></script>
 </body>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Science &mdash; NeuroTrace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .sci-figure {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+    .sci-figure img {
+      width: 100%;
+      border-radius: var(--r);
+      display: block;
+    }
+    .sci-figure-caption {
+      font-size: 12px;
+      color: var(--text-light);
+      font-style: italic;
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+    .sci-figure-caption strong {
+      font-style: normal;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .sci-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 700px) {
+      .sci-two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nt-nav">
+    <div class="nt-nav-inner">
+      <a href="index.html" class="nt-logo">
+        <div class="nt-logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <path d="M2 12c2-5 4-5 6 0s4 5 6 0 2-5 4-5"/>
+          </svg>
+        </div>
+        <div class="nt-logo-text">
+          <span class="nt-logo-name">NeuroTrace</span>
+          <span class="nt-logo-sub">AI.GOV</span>
+        </div>
+      </a>
+
+      <nav class="nt-tabs">
+        <a href="index.html"             class="nt-tab">OVERVIEW</a>
+        <a href="diagnosis.html#drawing" class="nt-tab">HANDWRITING</a>
+        <a href="diagnosis.html#voice"   class="nt-tab">VOICE</a>
+        <a href="survey.html"            class="nt-tab">SURVEY</a>
+        <a href="diagnosis.html#results" class="nt-tab">REPORT</a>
+        <a href="science.html"           class="nt-tab active">SCIENCE</a>
+        <a href="stack.html"             class="nt-tab">STACK</a>
+      </nav>
+
+      <div class="nt-nav-right">
+        <a href="science.html" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Read Our Paper
+        </a>
+        <a href="https://github.com/Capserdev/AI.Gov" target="_blank" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          See Our Website Code
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <section class="nt-section">
+    <div class="nt-container">
+
+      <!-- Page heading -->
+      <div class="nt-page-head">
+        <div class="nt-page-icon">&#9879;&#65039;</div>
+        <h1>The Science</h1>
+        <p>Understanding the digital biomarkers and clinical research behind NeuroTrace.</p>
+      </div>
+
+      <!-- Paper card -->
+      <div class="nt-paper-big">
+        <div>
+          <div class="nt-paper-big-label">Read Our Paper</div>
+          <div class="nt-paper-big-title">"Classifying Parkinson's Disease, PSP, and MSA: A Multimodal Machine Learning Study on Short Voice Tasks and Spiral/Wave Handwriting"</div>
+        </div>
+        <a href="#" class="nt-btn-sm">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          View on Overleaf
+        </a>
+      </div>
+
+      <!-- Clinical need callout -->
+      <div class="nt-callout">
+        <div class="nt-callout-label">The Clinical Need</div>
+        <p>
+          Parkinson's disease affects over <strong>10 million people worldwide</strong>. The average time from
+          symptom onset to diagnosis is <strong>1&ndash;2 years</strong>, and up to <strong>30% of early diagnoses
+          are incorrect</strong>. NeuroTrace offers a free, non-invasive, AI-powered screening tool that can be
+          administered in under 5 minutes.
+        </p>
+      </div>
+
+      <!-- ── System Pipeline ───────────────────────────────────────────────── -->
+      <div class="nt-section-head" style="margin-top: 40px;">
+        <h2>System Pipeline</h2>
+        <p>From multimodal recording to feature extraction, model training, and evaluation.</p>
+      </div>
+
+      <div class="sci-figure">
+        <img
+          src="https://raw.githubusercontent.com/Capserdev/AI.Gov/main/assets/fig_pipeline.png"
+          alt="Overall system pipeline diagram"
+          loading="lazy"
+        />
+        <p class="sci-figure-caption">
+          <strong>Figure 1.</strong>
+          Overall pipeline from multimodal recording to feature extraction, model training, and evaluation.
+        </p>
+      </div>
+
+      <!-- ── Handwriting Biomarkers ─────────────────────────────────────────── -->
+      <div class="nt-section-head" style="margin-top: 48px;">
+        <h2>Handwriting Biomarkers</h2>
+        <p>Motor control signatures captured through standardized drawing tasks.</p>
+      </div>
+
+      <div class="sci-figure">
+        <img
+          src="https://raw.githubusercontent.com/Capserdev/AI.Gov/main/assets/fig_drawings.png"
+          alt="Example meander, spiral, and wave drawings from HC and PD participants"
+          loading="lazy"
+        />
+        <p class="sci-figure-caption">
+          <strong>Figure 2.</strong>
+          Example meander, spiral, and wave drawings from one healthy control and one participant with PD.
+          Differences in curvature, spacing, and tremor motivate automated analysis.
+        </p>
+      </div>
+
+      <div class="sci-figure">
+        <img
+          src="https://raw.githubusercontent.com/Capserdev/AI.Gov/main/assets/fig_gradcam.png"
+          alt="Grad-CAM visualizations of handwriting models"
+          loading="lazy"
+        />
+        <p class="sci-figure-caption">
+          <strong>Figure 3.</strong>
+          Grad-CAM visualizations of handwriting models. Red regions mark strokes that contributed most strongly
+          to PD predictions, often near irregular or tremor-like segments.
+        </p>
+      </div>
+
+      <!-- ── Vocal Biomarkers ───────────────────────────────────────────────── -->
+      <div class="nt-section-head" style="margin-top: 48px;">
+        <h2>Vocal Biomarkers</h2>
+        <p>Acoustic feature extraction and classification across voice recording tasks.</p>
+      </div>
+
+      <div class="sci-figure">
+        <img
+          src="https://raw.githubusercontent.com/Capserdev/AI.Gov/main/assets/fig_voice_transparency.png"
+          alt="Signal-to-model transparency: waveform, mel-spectrogram, and feature vectors"
+          loading="lazy"
+        />
+        <p class="sci-figure-caption">
+          <strong>Figure 4.</strong>
+          Signal-to-model transparency showing raw waveform, mel-spectrogram, and 36-dimensional feature vector
+          for HC, PD, PSP, and MSA. Feature fingerprint shows class-level separation across all 36 features.
+        </p>
+      </div>
+
+      <div class="sci-two-col">
+        <div class="sci-figure">
+          <img
+            src="https://raw.githubusercontent.com/Capserdev/AI.Gov/main/assets/fig_roc_voice.png"
+            alt="ROC curves across voice tasks"
+            loading="lazy"
+          />
+          <p class="sci-figure-caption">
+            <strong>Figure 5.</strong>
+            ROC and accuracy across voice tasks. Vowels AUC = 0.932, AHH AUC = 0.967, Text+Spont AUC = 0.852
+            &mdash; showing clinically meaningful PD screening performance.
+          </p>
+        </div>
+        <div class="sci-figure">
+          <img
+            src="https://raw.githubusercontent.com/Capserdev/AI.Gov/main/assets/fig_threshold.png"
+            alt="Threshold tradeoff for text-based PD vs HC model"
+            loading="lazy"
+          />
+          <p class="sci-figure-caption">
+            <strong>Figure 6.</strong>
+            Threshold tradeoff for the text-based PD vs HC model. The chosen operating point keeps PD recall
+            very high while preserving useful precision and accuracy.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── Performance ───────────────────────────────────────────────────── -->
+      <div class="nt-section-head" style="margin-top: 48px;">
+        <h2>Model Performance</h2>
+        <p>ROC curves and confusion matrices across handwriting and voice classifiers.</p>
+      </div>
+
+      <div class="sci-figure">
+        <img
+          src="https://raw.githubusercontent.com/Capserdev/AI.Gov/main/assets/fig_roc_handwriting_and_4class.png"
+          alt="ROC curves for handwriting models and 4-class confusion matrix"
+          loading="lazy"
+        />
+        <p class="sci-figure-caption">
+          <strong>Figure 7.</strong>
+          ROC curves for PD vs HC handwriting models (AUC 0.947&ndash;0.973) and normalized confusion matrix
+          for the four-class voice SVM.
+        </p>
+      </div>
+
+      <div class="sci-figure">
+        <img
+          src="https://raw.githubusercontent.com/Capserdev/AI.Gov/main/assets/fig_confusion_pdvshc.png"
+          alt="PD vs HC confusion matrices at standard and optimized thresholds"
+          loading="lazy"
+        />
+        <p class="sci-figure-caption">
+          <strong>Figure 8.</strong>
+          PD vs HC confusion matrices at standard and PD-optimized thresholds. Lower thresholds increase PD recall
+          at the cost of more false positives in healthy controls.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Medical Disclaimer -->
+  <section style="padding: 0 0 40px;">
+    <div class="nt-container">
+      <div class="nt-disclaimer-box">
+        <span class="nt-disclaimer-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </span>
+        <p><strong>Medical Disclaimer:</strong> NeuroTrace is a research screening tool and is not a substitute for professional medical diagnosis. This tool has not been evaluated or approved by the FDA. Always consult a qualified healthcare professional for medical advice, diagnosis, or treatment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="nt-footer">
+    <p>Conceptualized and developed in the United States &#127482;&#127480;</p>
+  </footer>
+
+</body>
+</html>

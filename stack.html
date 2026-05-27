@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platform &mdash; NeuroTrace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nt-nav">
+    <div class="nt-nav-inner">
+      <a href="index.html" class="nt-logo">
+        <div class="nt-logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <path d="M2 12c2-5 4-5 6 0s4 5 6 0 2-5 4-5"/>
+          </svg>
+        </div>
+        <div class="nt-logo-text">
+          <span class="nt-logo-name">NeuroTrace</span>
+          <span class="nt-logo-sub">AI.GOV</span>
+        </div>
+      </a>
+
+      <nav class="nt-tabs">
+        <a href="index.html"             class="nt-tab">OVERVIEW</a>
+        <a href="diagnosis.html#drawing" class="nt-tab">HANDWRITING</a>
+        <a href="diagnosis.html#voice"   class="nt-tab">VOICE</a>
+        <a href="survey.html"            class="nt-tab">SURVEY</a>
+        <a href="diagnosis.html#results" class="nt-tab">REPORT</a>
+        <a href="science.html"           class="nt-tab">SCIENCE</a>
+        <a href="stack.html"             class="nt-tab active">STACK</a>
+      </nav>
+
+      <div class="nt-nav-right">
+        <a href="science.html" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Read Our Paper
+        </a>
+        <a href="https://github.com/Capserdev/AI.Gov" target="_blank" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          See Our Website Code
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <section class="nt-section">
+    <div class="nt-container">
+
+      <!-- Page heading -->
+      <div class="nt-page-head">
+        <div class="nt-page-icon">&#9881;&#65039;</div>
+        <h1>Platform</h1>
+        <p>Technical architecture, model status, and system information.</p>
+      </div>
+
+      <!-- Tech Cards -->
+      <div class="nt-cards-3">
+        <div class="nt-tech-card">
+          <div class="nt-tech-chip">Streamlit &rarr; React</div>
+          <h3>Frontend</h3>
+          <p>Python-native web framework with reactive data flow and custom CSS.</p>
+        </div>
+        <div class="nt-tech-card">
+          <div class="nt-tech-chip">TensorFlow / Keras</div>
+          <h3>Vision Models</h3>
+          <p>EfficientNetV2B0 pretrained on ImageNet, fine-tuned on HandPD dataset with 4&times; TTA.</p>
+        </div>
+        <div class="nt-tech-card">
+          <div class="nt-tech-chip">scikit-learn / joblib</div>
+          <h3>Voice Models</h3>
+          <p>SVC pipelines trained on acoustic features from PC-GITA dataset.</p>
+        </div>
+        <div class="nt-tech-card">
+          <div class="nt-tech-chip">librosa</div>
+          <h3>Feature Extraction</h3>
+          <p>36 acoustic features: 13 MFCC mean/std, jitter, shimmer, HNR, ZCR, spectral.</p>
+        </div>
+        <div class="nt-tech-card">
+          <div class="nt-tech-chip">Custom</div>
+          <h3>Ensemble</h3>
+          <p>Weighted averaging: handwriting (40%), voice (35%), survey (25%).</p>
+        </div>
+        <div class="nt-tech-card">
+          <div class="nt-tech-chip">Local / Streamlit Cloud</div>
+          <h3>Deployment</h3>
+          <p>Runs locally or deploys to Streamlit Cloud. Demo mode without models.</p>
+        </div>
+      </div>
+
+      <!-- Model Status -->
+      <div class="nt-model-status-section">
+        <div class="nt-status-label">Model Status</div>
+
+        <div class="nt-status-sublabel">Handwriting Models</div>
+        <div class="nt-cards-3">
+          <div class="nt-model-status-card">
+            <div>
+              <div class="nt-model-status-name">Meander</div>
+              <div class="nt-model-status-file">MeanderModel_finetune_best.keras</div>
+            </div>
+            <span class="nt-status-notfound" id="status-meander-model">
+              <span class="nt-status-dot"></span> NOT FOUND
+            </span>
+          </div>
+          <div class="nt-model-status-card">
+            <div>
+              <div class="nt-model-status-name">Spiral</div>
+              <div class="nt-model-status-file">SpiralModel_1_finetune_best.keras</div>
+            </div>
+            <span class="nt-status-notfound" id="status-spiral-model">
+              <span class="nt-status-dot"></span> NOT FOUND
+            </span>
+          </div>
+          <div class="nt-model-status-card">
+            <div>
+              <div class="nt-model-status-name">Wave</div>
+              <div class="nt-model-status-file">WaveModel_finetune_best.keras</div>
+            </div>
+            <span class="nt-status-notfound" id="status-wave-model">
+              <span class="nt-status-dot"></span> NOT FOUND
+            </span>
+          </div>
+        </div>
+
+        <div class="nt-status-sublabel">Voice Models</div>
+        <div class="nt-cards-4">
+          <div class="nt-model-status-card">
+            <div>
+              <div class="nt-model-status-name">Ahh</div>
+              <div class="nt-model-status-file">PD_vs_HC_AHH.joblib</div>
+            </div>
+            <span class="nt-status-notfound" id="status-ahh-model">
+              <span class="nt-status-dot"></span> NOT FOUND
+            </span>
+          </div>
+          <div class="nt-model-status-card">
+            <div>
+              <div class="nt-model-status-name">Vowels</div>
+              <div class="nt-model-status-file">PD_vs_HC_vowels.joblib</div>
+            </div>
+            <span class="nt-status-notfound" id="status-vowels-model">
+              <span class="nt-status-dot"></span> NOT FOUND
+            </span>
+          </div>
+          <div class="nt-model-status-card">
+            <div>
+              <div class="nt-model-status-name">Text</div>
+              <div class="nt-model-status-file">PD_vs_HC_text.joblib</div>
+            </div>
+            <span class="nt-status-notfound" id="status-text-model">
+              <span class="nt-status-dot"></span> NOT FOUND
+            </span>
+          </div>
+          <div class="nt-model-status-card">
+            <div>
+              <div class="nt-model-status-name">4-Class</div>
+              <div class="nt-model-status-file">Vowels_4class_HC_PD_PSP_MSA.joblib</div>
+            </div>
+            <span class="nt-status-notfound" id="status-4class-model">
+              <span class="nt-status-dot"></span> NOT FOUND
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Architecture Stats -->
+      <div class="nt-arch-stats">
+        <div class="nt-arch-stat">
+          <div class="nt-arch-stat-num">36</div>
+          <div class="nt-arch-stat-label">Acoustic Features</div>
+          <div class="nt-arch-stat-sub">per audio sample</div>
+        </div>
+        <div class="nt-arch-stat">
+          <div class="nt-arch-stat-num">224&sup2;</div>
+          <div class="nt-arch-stat-label">Image Resolution</div>
+          <div class="nt-arch-stat-sub">pixel input</div>
+        </div>
+        <div class="nt-arch-stat">
+          <div class="nt-arch-stat-num">4</div>
+          <div class="nt-arch-stat-label">TTA Passes</div>
+          <div class="nt-arch-stat-sub">per prediction</div>
+        </div>
+        <div class="nt-arch-stat">
+          <div class="nt-arch-stat-num">4</div>
+          <div class="nt-arch-stat-label">Voice Classes</div>
+          <div class="nt-arch-stat-sub">HC/PD/PSP/MSA</div>
+        </div>
+        <div class="nt-arch-stat">
+          <div class="nt-arch-stat-num">22050</div>
+          <div class="nt-arch-stat-label">Sample Rate</div>
+          <div class="nt-arch-stat-sub">Hz</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Medical Disclaimer -->
+  <section style="padding: 0 0 40px;">
+    <div class="nt-container">
+      <div class="nt-disclaimer-box">
+        <span class="nt-disclaimer-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </span>
+        <p><strong>Medical Disclaimer:</strong> NeuroTrace is a research tool for AI Presidential Challenge 2026. It is <strong>not</strong> a certified medical device and has not been approved by the FDA. Always consult a qualified healthcare provider.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="nt-footer">
+    <p>NEUROTRACE v1.0 &nbsp;&middot;&nbsp; AI Presidential Challenge 2026</p>
+    <p style="margin-top:6px;">Conceptualized and developed in the United States &#127482;&#127480;</p>
+  </footer>
+
+  <script>
+    // Check model status against backend if available
+    async function checkModelStatus() {
+      const apiUrl = 'http://localhost:7860';
+      try {
+        const res = await fetch(`${apiUrl}/status`, { signal: AbortSignal.timeout(3000) });
+        if (!res.ok) return;
+        const data = await res.json();
+        const modelMap = {
+          'meander':  'status-meander-model',
+          'spiral':   'status-spiral-model',
+          'wave':     'status-wave-model',
+          'ahh':      'status-ahh-model',
+          'vowels':   'status-vowels-model',
+          'text':     'status-text-model',
+          '4class':   'status-4class-model',
+        };
+        Object.entries(modelMap).forEach(([key, elemId]) => {
+          const el = document.getElementById(elemId);
+          if (!el) return;
+          if (data[key] === true) {
+            el.innerHTML = '<span class="nt-status-dot" style="background:var(--green)"></span> <span style="color:var(--green)">LOADED</span>';
+          }
+        });
+      } catch (_) { /* backend not reachable — keep NOT FOUND */ }
+    }
+    checkModelStatus();
+  </script>
+
+</body>
+</html>

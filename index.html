@@ -3,264 +3,289 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeuroVoice DX — AI-Assisted Neurological Disorder Screening</title>
+  <title>NeuroTrace — Parkinson's Screening through Digital Biomarkers</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <!-- Disclaimer Banner -->
-  <div class="disclaimer-banner">
-    <span class="disclaimer-icon">⚠</span>
-    For research and educational purposes only. Not a substitute for professional medical diagnosis.
-  </div>
-
   <!-- Navigation -->
-  <nav class="navbar">
-    <div class="nav-inner">
-      <div class="nav-brand">
-        <div class="brand-dot"></div>
-        <span class="brand-name">NeuroVoice<span class="brand-dx">DX</span></span>
+  <nav class="nt-nav">
+    <div class="nt-nav-inner">
+      <a href="index.html" class="nt-logo">
+        <div class="nt-logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <path d="M2 12c2-5 4-5 6 0s4 5 6 0 2-5 4-5"/>
+          </svg>
+        </div>
+        <div class="nt-logo-text">
+          <span class="nt-logo-name">NeuroTrace</span>
+          <span class="nt-logo-sub">AI.GOV</span>
+        </div>
+      </a>
+
+      <nav class="nt-tabs">
+        <a href="index.html"      class="nt-tab active">OVERVIEW</a>
+        <a href="diagnosis.html#drawing" class="nt-tab">HANDWRITING</a>
+        <a href="diagnosis.html#voice"   class="nt-tab">VOICE</a>
+        <a href="survey.html"            class="nt-tab">SURVEY</a>
+        <a href="diagnosis.html#results" class="nt-tab">REPORT</a>
+        <a href="science.html"    class="nt-tab">SCIENCE</a>
+        <a href="stack.html"      class="nt-tab">STACK</a>
+      </nav>
+
+      <div class="nt-nav-right">
+        <a href="science.html" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Read Our Paper
+        </a>
+        <a href="https://github.com/Capserdev/AI.Gov" target="_blank" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          See Our Website Code
+        </a>
       </div>
-      <div class="nav-links">
-        <a href="index.html" class="nav-link active">Home</a>
-        <a href="diagnosis.html" class="nav-link">Assessment</a>
-        <a href="#models" class="nav-link">Models</a>
-        <a href="#about" class="nav-link">About</a>
-      </div>
-      <a href="diagnosis.html" class="btn-primary">Start Assessment</a>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-badge">AI-Powered Clinical Research Tool</div>
-      <h1 class="hero-title">
-        Multi-Modal AI Screening for<br />
-        <span class="hero-accent">Neurological Movement Disorders</span>
+  <section class="nt-hero">
+    <div class="nt-hero-inner">
+      <h1 class="nt-hero-title">
+        Parkinson's screening<br>
+        <span class="nt-hero-blue">through digital biomarkers</span>
       </h1>
-      <p class="hero-subtitle">
-        Combining voice biomarker analysis and handwriting pattern recognition across 8 independent AI models
-        to screen for Parkinson's Disease, Progressive Supranuclear Palsy, and Multiple System Atrophy.
+      <p class="nt-hero-sub">
+        NeuroTrace combines handwriting analysis, vocal biomarkers, and lifestyle
+        assessment into a unified, non-invasive screening tool powered by deep learning.
       </p>
-      <div class="hero-actions">
-        <a href="diagnosis.html" class="btn-primary btn-large">Begin Assessment</a>
-        <a href="#models" class="btn-outline btn-large">View Models</a>
+      <div class="nt-hero-actions">
+        <a href="diagnosis.html" class="nt-btn-dark">Start Screening &rarr;</a>
+        <a href="#how-it-works" class="nt-btn-outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+          Learn More
+        </a>
       </div>
-      <div class="hero-stats">
-        <div class="stat">
-          <div class="stat-number">8</div>
-          <div class="stat-label">AI Models</div>
+      <div class="nt-stats">
+        <div class="nt-stat">
+          <div class="nt-stat-num">10M+</div>
+          <div class="nt-stat-label">People affected globally</div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-number">4</div>
-          <div class="stat-label">Conditions Analyzed</div>
+        <div class="nt-stat">
+          <div class="nt-stat-num">7</div>
+          <div class="nt-stat-label">ML models</div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-number">36</div>
-          <div class="stat-label">Voice Biomarkers</div>
+        <div class="nt-stat">
+          <div class="nt-stat-num">3</div>
+          <div class="nt-stat-label">Diagnostic modalities</div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-number">2</div>
-          <div class="stat-label">Input Modalities</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Conditions -->
-  <section class="section" id="conditions">
-    <div class="container">
-      <div class="section-header">
-        <h2>Conditions Screened</h2>
-        <p>This tool screens for four neurological movement disorders that share overlapping clinical features.</p>
-      </div>
-      <div class="card-grid four-col">
-        <div class="condition-card pd">
-          <div class="condition-abbr">PD</div>
-          <div class="condition-name">Parkinson's Disease</div>
-          <p>The most common movement disorder, characterized by tremor, rigidity, and bradykinesia. Affects dopaminergic neurons in the substantia nigra.</p>
-        </div>
-        <div class="condition-card hc">
-          <div class="condition-abbr">HC</div>
-          <div class="condition-name">Healthy Control</div>
-          <p>No neurological movement disorder present. Serves as the baseline comparison group for all diagnostic models.</p>
-        </div>
-        <div class="condition-card psp">
-          <div class="condition-abbr">PSP</div>
-          <div class="condition-name">Progressive Supranuclear Palsy</div>
-          <p>An atypical Parkinsonian syndrome causing balance problems, eye movement abnormalities, and cognitive changes.</p>
-        </div>
-        <div class="condition-card msa">
-          <div class="condition-abbr">MSA</div>
-          <div class="condition-name">Multiple System Atrophy</div>
-          <p>A rare progressive neurodegenerative disorder affecting the autonomic nervous system, balance, and voluntary movement.</p>
+        <div class="nt-stat">
+          <div class="nt-stat-num">89%</div>
+          <div class="nt-stat-label">Avg model accuracy</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- How It Works -->
-  <section class="section section-alt" id="how-it-works">
-    <div class="container">
-      <div class="section-header">
-        <h2>How It Works</h2>
-        <p>A two-modality assessment combined with an ensemble AI system for comprehensive screening.</p>
+  <section class="nt-section" id="how-it-works">
+    <div class="nt-container">
+      <div class="nt-section-head">
+        <h2>How it works</h2>
+        <p>Three complementary modalities for comprehensive screening.</p>
       </div>
-      <div class="card-grid three-col">
-        <div class="feature-card">
-          <div class="feature-icon voice-icon">🎙</div>
-          <h3>Voice Analysis</h3>
-          <p>Upload three short voice recordings (sustained vowel, text reading, vowel sounds). The system extracts 36 acoustic biomarkers — jitter, shimmer, harmonicity, formants, and nonlinear dynamics — and runs them through SVM classifiers.</p>
-          <div class="feature-tag">4 Voice Models</div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon draw-icon">✏️</div>
+      <div class="nt-cards-3">
+        <div class="nt-method-card">
+          <div class="nt-method-tag">
+            <span class="nt-step-num">01 &mdash;</span>
+            <span class="nt-step-cat handwriting">HANDWRITING</span>
+          </div>
           <h3>Drawing Analysis</h3>
-          <p>Upload images of standard clinical drawing tasks: Archimedean spiral, meander pattern, and sinusoidal wave. Deep learning models (EfficientNet) analyze motor control signatures in the drawings.</p>
-          <div class="feature-tag">4 Drawing Models</div>
+          <p>EfficientNetV2B0 models detect micrographia and tremor patterns in meander, spiral, and wave drawings.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon ai-icon">🧠</div>
-          <h3>Ensemble Diagnosis</h3>
-          <p>All 8 model outputs are aggregated using a weighted ensemble algorithm. Results are presented as probability distributions across the four conditions with confidence indicators.</p>
-          <div class="feature-tag">Weighted Ensemble</div>
+        <div class="nt-method-card">
+          <div class="nt-method-tag">
+            <span class="nt-step-num">02 &mdash;</span>
+            <span class="nt-step-cat voice">VOICE</span>
+          </div>
+          <h3>Vocal Biomarkers</h3>
+          <p>SVC models analyze jitter, shimmer, and MFCC features from sustained vowels and connected speech.</p>
+        </div>
+        <div class="nt-method-card">
+          <div class="nt-method-tag">
+            <span class="nt-step-num">03 &mdash;</span>
+            <span class="nt-step-cat survey">SURVEY</span>
+          </div>
+          <h3>Lifestyle Assessment</h3>
+          <p>Clinically-validated questionnaire assessing motor symptoms, non-motor indicators, and risk factors.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Models Section -->
-  <section class="section" id="models">
-    <div class="container">
-      <div class="section-header">
-        <h2>AI Model Architecture</h2>
-        <p>Eight specialized models trained on acoustic and motor biomarkers.</p>
+  <!-- Models -->
+  <section class="nt-section nt-section-alt" id="models">
+    <div class="nt-container">
+      <div class="nt-section-head">
+        <h2>Models</h2>
+        <p>Seven specialized models across two diagnostic modalities.</p>
       </div>
-      <div class="model-table-wrapper">
-        <table class="model-table">
-          <thead>
-            <tr>
-              <th>Model</th>
-              <th>Type</th>
-              <th>Input</th>
-              <th>Classes</th>
-              <th>Algorithm</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="model-name">PD vs HC — AHH Vowel</span></td>
-              <td><span class="badge badge-binary">Binary</span></td>
-              <td>36 voice features</td>
-              <td>PD, HC</td>
-              <td>SVM + StandardScaler</td>
-            </tr>
-            <tr>
-              <td><span class="model-name">PD vs HC — Text Reading</span></td>
-              <td><span class="badge badge-binary">Binary</span></td>
-              <td>36 voice features</td>
-              <td>PD, HC</td>
-              <td>SVM + StandardScaler</td>
-            </tr>
-            <tr>
-              <td><span class="model-name">PD vs HC — Vowels</span></td>
-              <td><span class="badge badge-binary">Binary</span></td>
-              <td>36 voice features</td>
-              <td>PD, HC</td>
-              <td>SVM + StandardScaler</td>
-            </tr>
-            <tr>
-              <td><span class="model-name">4-Class Vowel Classifier</span></td>
-              <td><span class="badge badge-multi">4-Class</span></td>
-              <td>36 voice features</td>
-              <td>HC, PD, PSP, MSA</td>
-              <td>SVM + StandardScaler</td>
-            </tr>
-            <tr>
-              <td><span class="model-name">Meander Drawing</span></td>
-              <td><span class="badge badge-cnn">CNN</span></td>
-              <td>224×224 image</td>
-              <td>HC, PD, PSP, MSA</td>
-              <td>EfficientNet (fine-tuned)</td>
-            </tr>
-            <tr>
-              <td><span class="model-name">Spiral Drawing — Model 1</span></td>
-              <td><span class="badge badge-cnn">CNN</span></td>
-              <td>224×224 image</td>
-              <td>HC, PD, PSP, MSA</td>
-              <td>EfficientNet (fine-tuned)</td>
-            </tr>
-            <tr>
-              <td><span class="model-name">Spiral Drawing — Model 2</span></td>
-              <td><span class="badge badge-cnn">CNN</span></td>
-              <td>224×224 image</td>
-              <td>HC, PD, PSP, MSA</td>
-              <td>EfficientNet (fine-tuned)</td>
-            </tr>
-            <tr>
-              <td><span class="model-name">Wave Drawing</span></td>
-              <td><span class="badge badge-cnn">CNN</span></td>
-              <td>224×224 image</td>
-              <td>HC, PD, PSP, MSA</td>
-              <td>EfficientNet (fine-tuned)</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Vision models -->
+      <div class="nt-cards-3">
+        <div class="nt-model-card">
+          <div class="nt-model-tags">
+            <span class="nt-type-tag vision">VISION</span>
+            <span class="nt-type-tag demo">DEMO</span>
+          </div>
+          <h4>Meander Model</h4>
+          <p>EfficientNetV2B0 fine-tuned on meander drawing patterns to detect tremor irregularities.</p>
+        </div>
+        <div class="nt-model-card">
+          <div class="nt-model-tags">
+            <span class="nt-type-tag vision">VISION</span>
+            <span class="nt-type-tag demo">DEMO</span>
+          </div>
+          <h4>Spiral Model</h4>
+          <p>EfficientNetV2B0 fine-tuned on Archimedean spiral drawings for tremor amplitude analysis.</p>
+        </div>
+        <div class="nt-model-card">
+          <div class="nt-model-tags">
+            <span class="nt-type-tag vision">VISION</span>
+            <span class="nt-type-tag demo">DEMO</span>
+          </div>
+          <h4>Wave Model</h4>
+          <p>EfficientNetV2B0 fine-tuned on sinusoidal wave tracings for motor control assessment.</p>
+        </div>
+      </div>
+      <!-- SVC models -->
+      <div class="nt-cards-4 nt-gap">
+        <div class="nt-model-card">
+          <div class="nt-model-tags">
+            <span class="nt-type-tag svc">SVC</span>
+            <span class="nt-type-tag demo">DEMO</span>
+          </div>
+          <h4>PD vs HC &mdash; Ahh</h4>
+          <p>Binary classifier on sustained phonation for vocal fold rigidity.</p>
+        </div>
+        <div class="nt-model-card">
+          <div class="nt-model-tags">
+            <span class="nt-type-tag svc">SVC</span>
+            <span class="nt-type-tag demo">DEMO</span>
+          </div>
+          <h4>PD vs HC &mdash; Vowels</h4>
+          <p>Binary classifier on sustained vowel production.</p>
+        </div>
+        <div class="nt-model-card">
+          <div class="nt-model-tags">
+            <span class="nt-type-tag svc">SVC</span>
+            <span class="nt-type-tag demo">DEMO</span>
+          </div>
+          <h4>PD vs HC &mdash; Text</h4>
+          <p>Binary classifier on connected speech.</p>
+        </div>
+        <div class="nt-model-card">
+          <div class="nt-model-tags">
+            <span class="nt-type-tag svc">SVC</span>
+            <span class="nt-type-tag demo">DEMO</span>
+          </div>
+          <h4>4-Class Differential</h4>
+          <p>Multi-class: Healthy, PD, PSP, MSA differentiation.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- About -->
-  <section class="section section-alt" id="about">
-    <div class="container">
-      <div class="about-grid">
-        <div class="about-text">
-          <h2>About This Research</h2>
-          <p>This tool was developed as part of a Science Fair research project investigating multi-modal AI approaches for early screening of Parkinson's Disease and related atypical Parkinsonian syndromes.</p>
-          <p>The voice models were trained on acoustic recordings from patients with confirmed diagnoses of PD, PSP, MSA, and healthy controls. The drawing models were trained on digitized clinical drawing assessments.</p>
-          <p>This system is intended solely for research demonstration and educational purposes. It does not constitute medical advice and should not be used for clinical decision-making.</p>
+  <!-- Recognition & Affiliations -->
+  <section class="nt-section" id="recognition">
+    <div class="nt-container">
+      <div class="nt-recognition-head">
+        <div class="nt-recog-pill">RECOGNITION &amp; AFFILIATIONS</div>
+        <h2>Published &amp; Backed By</h2>
+        <p>Our research has been accepted for publication and is backed by leading medical institutions.</p>
+      </div>
+
+      <!-- MDS card -->
+      <div class="nt-mds-card">
+        <div class="nt-mds-top">
+          <span class="nt-accepted-tag">&#10003; ACCEPTED FOR PUBLICATION</span>
+          <span class="nt-congress-tag">MDS CONGRESS 2026 &middot; SEOUL</span>
         </div>
-        <div class="about-disclaimer-box">
-          <div class="disclaimer-title">⚕ Medical Disclaimer</div>
-          <p>This AI tool is a research prototype. Results are not validated for clinical use. Always consult a qualified neurologist for diagnosis and treatment of movement disorders.</p>
-          <div class="disclaimer-list">
-            <div class="disclaimer-item">✓ Research use only</div>
-            <div class="disclaimer-item">✓ Not FDA cleared</div>
-            <div class="disclaimer-item">✓ Not for clinical decisions</div>
+        <div class="nt-mds-body">
+          <div class="nt-mds-logo">&#129504;</div>
+          <div class="nt-mds-content">
+            <h3>Movement Disorders Society</h3>
+            <p>Two abstracts accepted for publication and e-poster presentation at the <strong>International Congress of Parkinson's Disease and Movement Disorders&reg;</strong>, Seoul, Korea &mdash; October 4&ndash;8, 2026. Published in the <em>Movement Disorders</em> journal online supplement.</p>
+            <div class="nt-abstract-row">
+              <strong>ABSTRACT 1 &mdash;</strong>
+              Voice-Based Screening of Parkinsonian Disorders Using Acoustic Feature Analysis and Machine Learning
+            </div>
+            <div class="nt-abstract-row">
+              <strong>ABSTRACT 2 &mdash;</strong>
+              Handwriting-Based Screening of Parkinson's Disease Using Image Analysis of Drawing Tasks
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- Yale + Mayo -->
+      <div class="nt-cards-2">
+        <div class="nt-affil-card">
+          <div class="nt-affil-icon">&#127891;</div>
+          <div class="nt-affil-content">
+            <span class="nt-affil-label">Yale University</span>
+            <h4>Dr. Veronica Santini</h4>
+            <p>Faculty collaborator in neurology research supporting the clinical validity and academic direction of this work.</p>
+          </div>
+        </div>
+        <div class="nt-affil-card">
+          <div class="nt-affil-icon">&#127973;</div>
+          <div class="nt-affil-content">
+            <span class="nt-affil-label">Mayo Clinic</span>
+            <h4>Clinical Collaborators</h4>
+            <p>Mayo Clinic researchers contributing clinical expertise and neurodegenerative disease knowledge to the development of this platform.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Read Our Paper -->
+  <section class="nt-section nt-section-alt" id="paper">
+    <div class="nt-container">
+      <div class="nt-paper-wrap">
+        <div>
+          <div class="nt-paper-label">Read Our Paper</div>
+          <div class="nt-paper-title">"Classifying Parkinson's Disease, PSP, and MSA: A Multimodal Machine Learning Study"</div>
+        </div>
+        <div class="nt-paper-actions">
+          <a href="science.html" class="nt-btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Read Paper
+          </a>
+          <a href="https://github.com/Capserdev/AI.Gov" target="_blank" class="nt-btn-sm">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Medical Disclaimer -->
+  <section style="padding: 24px 0 40px;">
+    <div class="nt-container">
+      <div class="nt-disclaimer-box">
+        <span class="nt-disclaimer-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </span>
+        <p><strong>Medical Disclaimer:</strong> NeuroTrace is a research screening tool and is not a substitute for professional medical diagnosis. This tool has not been evaluated or approved by the FDA. Always consult a qualified healthcare professional for medical advice, diagnosis, or treatment. Do not use this tool as the sole basis for any medical decision.</p>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-brand">
-          <div class="nav-brand">
-            <div class="brand-dot"></div>
-            <span class="brand-name">NeuroVoice<span class="brand-dx">DX</span></span>
-          </div>
-          <p>AI-assisted neurological disorder screening.</p>
-        </div>
-        <div class="footer-links">
-          <a href="index.html">Home</a>
-          <a href="diagnosis.html">Assessment</a>
-          <a href="#models">Models</a>
-          <a href="#about">About</a>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>For research and educational purposes only. Not a medical device.</p>
-      </div>
-    </div>
+  <footer class="nt-footer">
+    <p>Conceptualized and developed in the United States &#127482;&#127480;</p>
   </footer>
 
 </body>
