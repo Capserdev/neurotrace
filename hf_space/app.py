@@ -54,14 +54,13 @@ voice_4class = _load_joblib("Vowels_4class_HC_PD_PSP_MSA.joblib")
 
 model_meander = _load_keras("MeanderModel_finetune_best.keras")
 model_spiral1 = _load_keras("SpiralModel_1_finetune_best.keras")
-model_spiral2 = _load_keras("SpiralModel_2_finetune_best.keras")
 model_wave    = _load_keras("WaveModel_finetune_best.keras")
 
 models_loaded = sum(1 for m in [
     voice_ahh, voice_text, voice_vowels, voice_4class,
-    model_meander, model_spiral1, model_spiral2, model_wave
+    model_meander, model_spiral1, model_wave
 ] if m is not None)
-print(f"Ready. {models_loaded}/8 models loaded.")
+print(f"Ready. {models_loaded}/7 models loaded.")
 
 CLASSES_4 = ["HC", "PD", "PSP", "MSA"]
 CLASSES_2 = ["HC", "PD"]
@@ -98,7 +97,6 @@ def health():
             "voice_4class": voice_4class is not None,
             "meander":      model_meander is not None,
             "spiral1":      model_spiral1 is not None,
-            "spiral2":      model_spiral2 is not None,
             "wave":         model_wave    is not None,
         }
     }
@@ -150,7 +148,7 @@ async def predict_drawing(
     file: UploadFile = File(...),
     drawing_type: str = Form("spiral1")
 ):
-    model_map = {"meander": model_meander, "spiral1": model_spiral1, "spiral2": model_spiral2, "wave": model_wave}
+    model_map = {"meander": model_meander, "spiral1": model_spiral1, "wave": model_wave}
     if drawing_type not in model_map:
         raise HTTPException(status_code=400, detail=f"Unknown drawing_type: {drawing_type}")
     model = model_map[drawing_type]
@@ -196,8 +194,8 @@ async def predict_ensemble(payload: dict):
             p4 = np.array([p2[0], p2[1], 0.0, 0.0]) if len(p2) == 2 else p2
             weighted_sum += per_binary * p4; total_weight += per_binary
 
-    per_drawing = 0.40 / 4
-    for key in ["meander", "spiral1", "spiral2", "wave"]:
+    per_drawing = 0.40 / 3
+    for key in ["meander", "spiral1", "wave"]:
         if key in drawing_results:
             p = np.array(drawing_results[key]["probabilities"])
             p4 = p if len(p) == 4 else np.array([p[0], p[1], 0.0, 0.0])
