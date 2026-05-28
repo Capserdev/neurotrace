@@ -223,27 +223,42 @@
     // Check model status against backend if available
     async function checkModelStatus() {
       const apiUrl = 'https://casper-284-neurotrace-api.hf.space';
+      // Map API model keys → DOM element IDs
+      const modelMap = {
+        'meander':      'status-meander-model',
+        'spiral1':      'status-spiral-model',
+        'wave':         'status-wave-model',
+        'voice_ahh':    'status-ahh-model',
+        'voice_vowels': 'status-vowels-model',
+        'voice_text':   'status-text-model',
+        'voice_4class': 'status-4class-model',
+      };
+
+      // Show checking state
+      Object.values(modelMap).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<span class="nt-status-dot" style="background:#94a3b8"></span> <span style="color:#94a3b8">CHECKING…</span>';
+      });
+
       try {
-        const res = await fetch(`${apiUrl}/status`, { signal: AbortSignal.timeout(3000) });
+        const res = await fetch(`${apiUrl}/status`, { signal: AbortSignal.timeout(30000) });
         if (!res.ok) return;
         const data = await res.json();
-        const modelMap = {
-          'meander':  'status-meander-model',
-          'spiral':   'status-spiral-model',
-          'wave':     'status-wave-model',
-          'ahh':      'status-ahh-model',
-          'vowels':   'status-vowels-model',
-          'text':     'status-text-model',
-          '4class':   'status-4class-model',
-        };
         Object.entries(modelMap).forEach(([key, elemId]) => {
           const el = document.getElementById(elemId);
           if (!el) return;
-          if (data[key] === true) {
+          if (data.models && data.models[key] === true) {
             el.innerHTML = '<span class="nt-status-dot" style="background:var(--green)"></span> <span style="color:var(--green)">LOADED</span>';
+          } else {
+            el.innerHTML = '<span class="nt-status-dot"></span> NOT FOUND';
           }
         });
-      } catch (_) { /* backend not reachable — keep NOT FOUND */ }
+      } catch (_) {
+        Object.values(modelMap).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = '<span class="nt-status-dot"></span> NOT FOUND';
+        });
+      }
     }
     checkModelStatus();
   </script>
