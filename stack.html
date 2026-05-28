@@ -222,7 +222,7 @@
   <script>
     // Check model status against backend if available
     async function checkModelStatus() {
-      const apiUrl = 'http://localhost:7860';
+      const apiUrl = 'https://casper-284-neurotrace-api.hf.space';
       try {
         const res = await fetch(`${apiUrl}/status`, { signal: AbortSignal.timeout(3000) });
         if (!res.ok) return;

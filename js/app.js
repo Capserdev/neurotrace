@@ -11,7 +11,7 @@ const state = {
 };
 
 function getApiUrl() {
-  return (document.getElementById('api-url')?.value || '').replace(/\/$/, '');
+  return (document.getElementById('api-url')?.value || 'https://casper-284-neurotrace-api.hf.space').replace(/\/$/, '');
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────────
