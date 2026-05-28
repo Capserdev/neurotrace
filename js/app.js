@@ -11,7 +11,7 @@ const state = {
 };
 
 function getApiUrl() {
-  return (document.getElementById('api-url')?.value || 'http://localhost:7860').replace(/\/$/, '');
+  return (document.getElementById('api-url')?.value || '').replace(/\/$/, '');
 }
 
 // ── Navigation ────────────────────────────────────────────────────────────────

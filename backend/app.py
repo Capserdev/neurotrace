@@ -12,6 +12,8 @@ import joblib
 
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from PIL import Image
 
 # TensorFlow / Keras
@@ -35,8 +37,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ── Paths ─────────────────────────────────────────────────────────────────────
+BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR    = os.path.dirname(BACKEND_DIR)   # repo root (where index.html lives)
+MODELS_DIR  = os.path.join(BACKEND_DIR, "models")
+
 # ── Load models at startup (graceful — skip missing files) ────────────────────
-MODELS_DIR = os.path.join(os.path.dirname(__file__), "models")
 
 def _load_joblib(filename):
     path = os.path.join(MODELS_DIR, filename)
@@ -326,6 +332,35 @@ async def predict_ensemble(payload: dict):
             "survey_included": survey_result is not None
         }
     }
+
+
+# ── Serve static frontend ──────────────────────────────────────────────────────
+# Mount CSS and JS directories
+app.mount("/css", StaticFiles(directory=os.path.join(ROOT_DIR, "css")), name="css")
+app.mount("/js",  StaticFiles(directory=os.path.join(ROOT_DIR, "js")),  name="js")
+
+# HTML page routes (both with and without .html extension)
+def _page(filename: str):
+    """Return a route handler that serves the given HTML file from ROOT_DIR."""
+    path = os.path.join(ROOT_DIR, filename)
+    def handler():
+        return FileResponse(path)
+    handler.__name__ = filename.replace(".", "_")
+    return handler
+
+for _route, _file in [
+    ("/",               "index.html"),
+    ("/index.html",     "index.html"),
+    ("/diagnosis",      "diagnosis.html"),
+    ("/diagnosis.html", "diagnosis.html"),
+    ("/survey",         "survey.html"),
+    ("/survey.html",    "survey.html"),
+    ("/science",        "science.html"),
+    ("/science.html",   "science.html"),
+    ("/stack",          "stack.html"),
+    ("/stack.html",     "stack.html"),
+]:
+    app.add_api_route(_route, _page(_file), methods=["GET"])
 
 
 if __name__ == "__main__":
