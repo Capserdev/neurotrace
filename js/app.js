@@ -6,7 +6,7 @@
 // ── State ─────────────────────────────────────────────────────────────────────
 const state = {
   voice: {},    // { ahh: {...result}, text: {...}, vowels: {...} }
-  drawing: {},  // { meander: {...}, spiral1: {...}, spiral2: {...}, wave: {...} }
+  drawing: {},  // { meander: {...}, spiral1: {...}, wave: {...} }
   currentStep: 1
 };
 
@@ -162,7 +162,7 @@ async function computeEnsembleAndShow() {
   if (state.voice.vowels_binary)  voicePayload.vowels_binary  = state.voice.vowels_binary;
 
   const drawingPayload = {};
-  ['meander','spiral1','spiral2','wave'].forEach(k => {
+  ['meander','spiral1','wave'].forEach(k => {
     if (state.drawing[k]) drawingPayload[k] = state.drawing[k];
   });
 
@@ -240,8 +240,7 @@ function renderResults(ensemble, voiceData, drawingData, surveyData) {
     { key: 'text_binary',    label: 'Text Reading — Binary (Voice)', src: voiceData },
     { key: 'vowels_binary',  label: 'Vowels — Binary (Voice)',       src: voiceData },
     { key: 'meander',        label: 'Meander Drawing',               src: drawingData },
-    { key: 'spiral1',        label: 'Spiral Drawing — Set 1',        src: drawingData },
-    { key: 'spiral2',        label: 'Spiral Drawing — Set 2',        src: drawingData },
+    { key: 'spiral1',        label: 'Spiral Drawing',                src: drawingData },
     { key: 'wave',           label: 'Wave Drawing',                  src: drawingData },
   ];
 
@@ -315,7 +314,7 @@ function resetAll() {
     const r = document.getElementById(`result-${t}`);
     if (r) r.innerHTML = '';
   });
-  ['meander','spiral1','spiral2','wave'].forEach(t => {
+  ['meander','spiral1','wave'].forEach(t => {
     document.getElementById(`card-${t}`)?.classList.remove('has-file','error','loading');
     const s = document.getElementById(`status-${t}`);
     if (s) s.textContent = '';
