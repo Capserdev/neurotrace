@@ -404,9 +404,14 @@ async def predict_ensemble(payload: dict):
 
 
 # ── Serve static frontend ──────────────────────────────────────────────────────
-app.mount("/css",    StaticFiles(directory=os.path.join(ROOT_DIR, "css")), name="css")
-app.mount("/js",     StaticFiles(directory=os.path.join(ROOT_DIR, "js")),  name="js")
-app.mount("/assets", StaticFiles(directory=os.path.join(ROOT_DIR, "assets")), name="assets")
+def _mount_if_exists(path: str, name: str):
+    d = os.path.join(ROOT_DIR, path)
+    if os.path.isdir(d):
+        app.mount(f"/{path}", StaticFiles(directory=d), name=name)
+
+_mount_if_exists("css",    "css")
+_mount_if_exists("js",     "js")
+_mount_if_exists("assets", "assets")
 
 
 def _page(filename: str):
