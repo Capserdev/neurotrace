@@ -94,20 +94,44 @@ models_loaded = sum(1 for m in ALL_MODELS if m is not None)
 print(f"Startup complete. {models_loaded}/7 models loaded.")
 
 
-# ── Image helpers ─────────────────────────────────────────────────────────────
-def preprocess_image_tta(file_bytes: bytes) -> np.ndarray:
+def _expects_raw_pixels(model) -> bool:
     """
-    Resize to 224×224 RGB with LANCZOS (matching original handwriting_engine.py)
-    then build a batch of TTA_PASSES augmented versions:
-        0: original
-        1: horizontal flip
-        2: vertical flip
-        3: 90° rotation
-    Returns shape (TTA_PASSES, 224, 224, 3).
+    True when the saved Keras model already contains a Rescaling/preprocessing layer
+    (EfficientNetV2B0 default: include_preprocessing=True).
+    In that case the model expects raw [0-255] float input; dividing by 255 first
+    would compress all values to [0, 0.004] and produce identical outputs.
+    """
+    if model is None:
+        return False
+    for layer in model.layers[:6]:
+        name = type(layer).__name__
+        if name in ("Rescaling", "Normalization") or "preprocess" in name.lower():
+            return True
+    return False
+
+# Per-model flag: True → pass raw [0-255], False → normalise to [0-1]
+meander_raw = _expects_raw_pixels(model_meander)
+spiral1_raw = _expects_raw_pixels(model_spiral1)
+wave_raw    = _expects_raw_pixels(model_wave)
+print(f"  Preprocessing — meander:{'raw' if meander_raw else '/255'}  "
+      f"spiral1:{'raw' if spiral1_raw else '/255'}  "
+      f"wave:{'raw' if wave_raw else '/255'}")
+
+
+# ── Image helpers ─────────────────────────────────────────────────────────────
+def preprocess_image_tta(file_bytes: bytes, raw_input: bool = False) -> np.ndarray:
+    """
+    Resize to 224×224 RGB with LANCZOS, then build 4-pass TTA batch.
+
+    raw_input=True  → pass pixel values as-is in [0-255]; use when the model
+                       has a built-in Rescaling layer (EfficientNetV2 default).
+    raw_input=False → normalise to [0-1] before feeding the model.
     """
     img = Image.open(io.BytesIO(file_bytes)).convert("RGB")
     img = img.resize((IMG_SIZE, IMG_SIZE), Image.LANCZOS)
-    arr = np.array(img, dtype=np.float32) / 255.0
+    arr = np.array(img, dtype=np.float32)
+    if not raw_input:
+        arr = arr / 255.0
 
     augs = [
         arr,
@@ -158,6 +182,11 @@ def health():
             "meander":      model_meander is not None,
             "spiral1":      model_spiral1 is not None,
             "wave":         model_wave    is not None,
+        },
+        "drawing_preprocessing": {
+            "meander": "raw[0-255]" if meander_raw else "normalized[0-1]",
+            "spiral1": "raw[0-255]" if spiral1_raw else "normalized[0-1]",
+            "wave":    "raw[0-255]" if wave_raw    else "normalized[0-1]",
         }
     }
 
@@ -234,12 +263,18 @@ async def predict_drawing(
 ):
     """
     Run a Keras drawing model with 4-pass TTA (original + h-flip + v-flip + 90°).
-    Preprocessing matches handwriting_engine.py: LANCZOS resize, /255 normalisation.
+    Preprocessing: LANCZOS resize to 224×224; normalisation determined per-model
+    (raw [0-255] if the model has a built-in Rescaling layer, else /255).
     """
     model_map = {
         "meander": model_meander,
         "spiral1": model_spiral1,
         "wave":    model_wave,
+    }
+    raw_map = {
+        "meander": meander_raw,
+        "spiral1": spiral1_raw,
+        "wave":    wave_raw,
     }
 
     if drawing_type not in model_map:
@@ -251,7 +286,7 @@ async def predict_drawing(
 
     img_bytes = await file.read()
     try:
-        tta_batch = preprocess_image_tta(img_bytes)      # (4, 224, 224, 3)
+        tta_batch = preprocess_image_tta(img_bytes, raw_input=raw_map[drawing_type])  # (4, 224, 224, 3)
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Image processing failed: {e}")
 

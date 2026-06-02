@@ -65,6 +65,32 @@ print(f"Ready. {models_loaded}/7 models loaded.")
 CLASSES_4 = ["HC", "PD", "PSP", "MSA"]
 CLASSES_2 = ["HC", "PD"]
 
+IMG_SIZE   = 224
+TTA_PASSES = 4
+
+
+def _expects_raw_pixels(model) -> bool:
+    """
+    True when the saved model already contains a Rescaling layer
+    (EfficientNetV2B0 default: include_preprocessing=True).
+    Passing /255-normalised values to such a model compresses the input
+    to [0, 0.004] and produces identical outputs for every image.
+    """
+    if model is None:
+        return False
+    for layer in model.layers[:6]:
+        name = type(layer).__name__
+        if name in ("Rescaling", "Normalization") or "preprocess" in name.lower():
+            return True
+    return False
+
+meander_raw = _expects_raw_pixels(model_meander)
+spiral1_raw = _expects_raw_pixels(model_spiral1)
+wave_raw    = _expects_raw_pixels(model_wave)
+print(f"  Preprocessing — meander:{'raw' if meander_raw else '/255'}  "
+      f"spiral1:{'raw' if spiral1_raw else '/255'}  "
+      f"wave:{'raw' if wave_raw else '/255'}")
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 def svm_predict_proba(model, features: np.ndarray, n_classes: int) -> np.ndarray:
@@ -78,9 +104,20 @@ def svm_predict_proba(model, features: np.ndarray, n_classes: int) -> np.ndarray
     return e / e.sum()
 
 
-def preprocess_image(file_bytes: bytes) -> np.ndarray:
-    img = Image.open(io.BytesIO(file_bytes)).convert("RGB").resize((224, 224))
-    return np.expand_dims(np.array(img, dtype=np.float32) / 255.0, axis=0)
+def preprocess_image_tta(file_bytes: bytes, raw_input: bool = False) -> np.ndarray:
+    """
+    LANCZOS resize to 224×224, then 4-pass TTA batch.
+    raw_input=True  → keep pixel values in [0-255] (model has built-in Rescaling).
+    raw_input=False → normalise to [0-1].
+    """
+    img = Image.open(io.BytesIO(file_bytes)).convert("RGB")
+    img = img.resize((IMG_SIZE, IMG_SIZE), Image.LANCZOS)
+    arr = np.array(img, dtype=np.float32)
+    if not raw_input:
+        arr = arr / 255.0
+
+    augs = [arr, arr[:, ::-1, :], arr[::-1, :, :], np.rot90(arr, k=1)]
+    return np.stack(augs[:TTA_PASSES], axis=0)  # (4, 224, 224, 3)
 
 
 # ── Routes ────────────────────────────────────────────────────────────────────
@@ -98,6 +135,11 @@ def health():
             "meander":      model_meander is not None,
             "spiral1":      model_spiral1 is not None,
             "wave":         model_wave    is not None,
+        },
+        "drawing_preprocessing": {
+            "meander": "raw[0-255]" if meander_raw else "normalized[0-1]",
+            "spiral1": "raw[0-255]" if spiral1_raw else "normalized[0-1]",
+            "wave":    "raw[0-255]" if wave_raw    else "normalized[0-1]",
         }
     }
 
@@ -149,6 +191,8 @@ async def predict_drawing(
     drawing_type: str = Form("spiral1")
 ):
     model_map = {"meander": model_meander, "spiral1": model_spiral1, "wave": model_wave}
+    raw_map   = {"meander": meander_raw,   "spiral1": spiral1_raw,   "wave": wave_raw}
+
     if drawing_type not in model_map:
         raise HTTPException(status_code=400, detail=f"Unknown drawing_type: {drawing_type}")
     model = model_map[drawing_type]
@@ -157,11 +201,13 @@ async def predict_drawing(
 
     img_bytes = await file.read()
     try:
-        img_array = preprocess_image(img_bytes)
+        tta_batch = preprocess_image_tta(img_bytes, raw_input=raw_map[drawing_type])
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Image processing failed: {e}")
 
-    raw = model.predict(img_array, verbose=0)[0]
+    raw_batch = model.predict(tta_batch, verbose=0)   # (4, output_dim)
+    raw = raw_batch.mean(axis=0)                       # average TTA passes
+
     if len(raw) == 4:
         probs, classes = raw.tolist(), CLASSES_4
     elif len(raw) == 2:
