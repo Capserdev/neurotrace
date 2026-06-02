@@ -324,6 +324,75 @@ function resetAll() {
   goToStep(1);
 }
 
+// ── Model readiness gate ──────────────────────────────────────────────────────
+let modelsReady = false;
+
+function setUploadsEnabled(enabled) {
+  document.querySelectorAll('.upload-card input[type="file"], .upload-btn').forEach(el => {
+    el.disabled = !enabled;
+    el.style.opacity = enabled ? '' : '0.4';
+    el.style.cursor  = enabled ? '' : 'not-allowed';
+  });
+}
+
+async function waitForModels() {
+  const banner   = document.getElementById('model-readiness-banner');
+  const icon     = document.getElementById('model-readiness-icon');
+  const title    = document.getElementById('model-readiness-title');
+  const detail   = document.getElementById('model-readiness-detail');
+
+  if (!banner) return; // not on diagnosis page
+
+  setUploadsEnabled(false);
+
+  const REQUIRED = 7;
+  const POLL_MS  = 5000;
+  const MAX_WAIT = 120000; // 2 minutes max
+  const started  = Date.now();
+
+  while (Date.now() - started < MAX_WAIT) {
+    try {
+      const res  = await fetch(`${getApiUrl()}/health`, { signal: AbortSignal.timeout(8000) });
+      const data = await res.json();
+      const loaded = data.models_loaded ?? 0;
+
+      if (loaded >= REQUIRED) {
+        // All models ready
+        modelsReady = true;
+        banner.style.background = '#f0fdf4';
+        banner.style.borderColor = '#bbf7d0';
+        banner.style.color = '#166534';
+        icon.textContent = '✅';
+        title.textContent = 'All models ready';
+        detail.textContent = `${loaded}/${REQUIRED} models loaded — uploads unlocked.`;
+        setUploadsEnabled(true);
+        setTimeout(() => { banner.style.display = 'none'; }, 3000);
+        return;
+      }
+
+      // Partial load
+      icon.textContent = '⏳';
+      title.textContent = `Loading models… (${loaded}/${REQUIRED})`;
+      detail.textContent = 'The backend is starting up. This usually takes under a minute.';
+
+    } catch (_) {
+      icon.textContent = '🔴';
+      title.textContent = 'Backend unreachable — retrying…';
+      detail.textContent = 'Check that the Backend URL above is correct.';
+    }
+
+    await new Promise(r => setTimeout(r, POLL_MS));
+  }
+
+  // Timed out
+  icon.textContent = '⚠️';
+  banner.style.background = '#fef2f2';
+  banner.style.borderColor = '#fecaca';
+  banner.style.color = '#991b1b';
+  title.textContent = 'Could not reach models after 2 minutes';
+  detail.textContent = 'Check the Backend URL or try refreshing. Uploads remain disabled.';
+}
+
 // ── On load ───────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   const savedUrl = localStorage.getItem('neurovox_api_url');
@@ -349,4 +418,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
   } catch (_) {}
+
+  // Gate uploads until all models are confirmed loaded
+  waitForModels();
 });
