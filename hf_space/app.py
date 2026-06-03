@@ -110,13 +110,13 @@ def preprocess_image_tta(file_bytes: bytes, raw_input: bool = False) -> np.ndarr
     """
     LANCZOS resize to 224×224, then 4-pass TTA batch.
     raw_input=True  → keep pixel values in [0-255] (model has built-in Rescaling).
-    raw_input=False → normalise to [0-1].
+    raw_input=False → EfficientNetV2 standard preprocess_input: [0,255] → [-1,1].
     """
     img = Image.open(io.BytesIO(file_bytes)).convert("RGB")
     img = img.resize((IMG_SIZE, IMG_SIZE), Image.LANCZOS)
     arr = np.array(img, dtype=np.float32)
     if not raw_input:
-        arr = arr / 255.0
+        arr = arr / 127.5 - 1.0   # EfficientNetV2 preprocess_input: [0,255] → [-1,1]
 
     augs = [arr, arr[:, ::-1, :], arr[::-1, :, :], np.rot90(arr, k=1)]
     return np.stack(augs[:TTA_PASSES], axis=0)  # (4, 224, 224, 3)
@@ -139,9 +139,9 @@ def health():
             "wave":         model_wave    is not None,
         },
         "drawing_preprocessing": {
-            "meander": "raw[0-255]" if meander_raw else "normalized[0-1]",
-            "spiral1": "raw[0-255]" if spiral1_raw else "normalized[0-1]",
-            "wave":    "raw[0-255]" if wave_raw    else "normalized[0-1]",
+            "meander": "raw[0-255]" if meander_raw else "efficientnet[-1,1]",
+            "spiral1": "raw[0-255]" if spiral1_raw else "efficientnet[-1,1]",
+            "wave":    "raw[0-255]" if wave_raw    else "efficientnet[-1,1]",
         }
     }
 
