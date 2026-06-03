@@ -74,7 +74,7 @@ def _load_keras(filename):
         print(f"  [SKIP] {filename} not found — model unavailable.")
         return None
     print(f"  [OK]   Loading {filename}")
-    return tf.keras.models.load_model(path)
+    return tf.keras.models.load_model(path, compile=False)
 
 
 print("Loading voice models...")
@@ -96,42 +96,52 @@ print(f"Startup complete. {models_loaded}/7 models loaded.")
 
 def _expects_raw_pixels(model) -> bool:
     """
-    True when the saved Keras model already contains a Rescaling/preprocessing layer
-    (EfficientNetV2B0 default: include_preprocessing=True).
-    In that case the model expects raw [0-255] float input; dividing by 255 first
-    would compress all values to [0, 0.004] and produce identical outputs.
+    True when the model or any sub-model contains a Rescaling layer.
+    EfficientNetV2B0 nests its Rescaling inside the efficientnetv2-b0 sub-model,
+    so we must recurse one level to detect it.
     """
     if model is None:
         return False
-    for layer in model.layers[:6]:
+    for layer in model.layers:
         name = type(layer).__name__
         if name in ("Rescaling", "Normalization") or "preprocess" in name.lower():
             return True
+        if hasattr(layer, 'layers'):
+            for sublayer in layer.layers[:8]:
+                subname = type(sublayer).__name__
+                if subname in ("Rescaling", "Normalization") or "preprocess" in subname.lower():
+                    return True
     return False
 
-# Per-model flag: True → pass raw [0-255], False → normalise to [0-1]
+
+def _input_name(model) -> str:
+    return model.layers[0].name if model is not None else "input"
+
+
 meander_raw = _expects_raw_pixels(model_meander)
 spiral1_raw = _expects_raw_pixels(model_spiral1)
 wave_raw    = _expects_raw_pixels(model_wave)
-print(f"  Preprocessing — meander:{'raw' if meander_raw else '/255'}  "
-      f"spiral1:{'raw' if spiral1_raw else '/255'}  "
-      f"wave:{'raw' if wave_raw else '/255'}")
+meander_inp = _input_name(model_meander)
+spiral1_inp = _input_name(model_spiral1)
+wave_inp    = _input_name(model_wave)
+print(f"  Preprocessing — meander:{'raw' if meander_raw else 'norm'}  "
+      f"spiral1:{'raw' if spiral1_raw else 'norm'}  "
+      f"wave:{'raw' if wave_raw else 'norm'}")
+print(f"  Input names   — meander:'{meander_inp}'  spiral1:'{spiral1_inp}'  wave:'{wave_inp}'")
 
 
 # ── Image helpers ─────────────────────────────────────────────────────────────
 def preprocess_image_tta(file_bytes: bytes, raw_input: bool = False) -> np.ndarray:
     """
     Resize to 224×224 RGB with LANCZOS, then build 4-pass TTA batch.
-
-    raw_input=True  → pass pixel values as-is in [0-255]; use when the model
-                       has a built-in Rescaling layer (EfficientNetV2 default).
-    raw_input=False → EfficientNetV2 standard preprocess_input: [0,255] → [-1,1].
+    raw_input=True  → pass [0-255]; the model's built-in Rescaling normalises internally.
+    raw_input=False → divide by 255 to [0-1].
     """
     img = Image.open(io.BytesIO(file_bytes)).convert("RGB")
     img = img.resize((IMG_SIZE, IMG_SIZE), Image.LANCZOS)
     arr = np.array(img, dtype=np.float32)
     if not raw_input:
-        arr = arr / 127.5 - 1.0   # EfficientNetV2 preprocess_input: [0,255] → [-1,1]
+        arr = arr / 255.0
 
     augs = [
         arr,
@@ -184,9 +194,9 @@ def health():
             "wave":         model_wave    is not None,
         },
         "drawing_preprocessing": {
-            "meander": "raw[0-255]" if meander_raw else "efficientnet[-1,1]",
-            "spiral1": "raw[0-255]" if spiral1_raw else "efficientnet[-1,1]",
-            "wave":    "raw[0-255]" if wave_raw    else "efficientnet[-1,1]",
+            "meander": "raw[0-255]" if meander_raw else "raw[0-255]",
+            "spiral1": "raw[0-255]" if spiral1_raw else "raw[0-255]",
+            "wave":    "raw[0-255]" if wave_raw    else "raw[0-255]",
         }
     }
 
@@ -276,6 +286,11 @@ async def predict_drawing(
         "spiral1": spiral1_raw,
         "wave":    wave_raw,
     }
+    inp_map = {
+        "meander": meander_inp,
+        "spiral1": spiral1_inp,
+        "wave":    wave_inp,
+    }
 
     if drawing_type not in model_map:
         raise HTTPException(status_code=400, detail=f"Unknown drawing_type '{drawing_type}'.")
@@ -290,9 +305,10 @@ async def predict_drawing(
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Image processing failed: {e}")
 
-    # Run model on all TTA passes and average
-    raw_batch = model.predict(tta_batch, verbose=0)      # (4, output_dim)
-    raw = raw_batch.mean(axis=0)                         # average over TTA
+    # Use named input dict — required by Keras 3 Functional models with named InputLayer
+    inp_name  = inp_map[drawing_type]
+    raw_batch = model({inp_name: tta_batch}, training=False).numpy()  # (4, output_dim)
+    raw = raw_batch.mean(axis=0)                                       # average over TTA
 
     # Interpret output shape
     if len(raw) == 4:
