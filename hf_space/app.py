@@ -10,6 +10,8 @@ import joblib
 
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from PIL import Image
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -265,3 +267,39 @@ async def predict_ensemble(payload: dict):
         "confidence": confidence, "models_used": models_loaded,
         "survey_included": survey_result is not None
     }}
+
+
+# ── Serve static frontend ─────────────────────────────────────────────────────
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def _mount_if_exists(route: str, name: str):
+    d = os.path.join(BASE_DIR, name)
+    if os.path.isdir(d):
+        app.mount(route, StaticFiles(directory=d), name=name)
+
+_mount_if_exists("/css",    "css")
+_mount_if_exists("/js",     "js")
+_mount_if_exists("/assets", "assets")
+
+
+def _page(filename: str):
+    path = os.path.join(BASE_DIR, filename)
+    def handler():
+        return FileResponse(path)
+    handler.__name__ = filename.replace(".", "_")
+    return handler
+
+
+for _route, _file in [
+    ("/",               "index.html"),
+    ("/index.html",     "index.html"),
+    ("/diagnosis",      "diagnosis.html"),
+    ("/diagnosis.html", "diagnosis.html"),
+    ("/survey",         "survey.html"),
+    ("/survey.html",    "survey.html"),
+    ("/science",        "science.html"),
+    ("/science.html",   "science.html"),
+    ("/stack",          "stack.html"),
+    ("/stack.html",     "stack.html"),
+]:
+    app.add_api_route(_route, _page(_file), methods=["GET"])
