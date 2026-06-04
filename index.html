@@ -249,6 +249,109 @@
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="nt-section" id="faq">
+    <div class="nt-container">
+      <div class="nt-section-head">
+        <h2>Frequently Asked Questions</h2>
+        <p>Common questions about NeuroTrace and how it works.</p>
+      </div>
+      <div class="nt-faq">
+
+        <div class="nt-faq-item">
+          <button class="nt-faq-q" aria-expanded="false">
+            What is NeuroTrace?
+            <svg class="nt-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nt-faq-a">
+            <p>NeuroTrace is an AI-powered research screening tool that combines three modalities — handwriting analysis, vocal biomarkers, and a lifestyle survey — to assess your risk for Parkinson's Disease and related conditions (PSP, MSA). It was developed by researchers affiliated with Yale University and Mayo Clinic and has been accepted for presentation at the 2026 Movement Disorders Society Congress.</p>
+          </div>
+        </div>
+
+        <div class="nt-faq-item">
+          <button class="nt-faq-q" aria-expanded="false">
+            Is this a medical diagnosis?
+            <svg class="nt-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nt-faq-a">
+            <p>No. NeuroTrace is a research screening tool, not a diagnostic device. It has not been evaluated or approved by the FDA. Results should never be used as the sole basis for a medical decision. If your results concern you, please consult a qualified neurologist or healthcare professional.</p>
+          </div>
+        </div>
+
+        <div class="nt-faq-item">
+          <button class="nt-faq-q" aria-expanded="false">
+            How accurate are the models?
+            <svg class="nt-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nt-faq-a">
+            <p>The seven underlying models average 89% accuracy on their respective validation sets. The handwriting models (EfficientNetV2B0) and voice classifiers (SVC) were trained and validated on separate held-out datasets. However, real-world performance varies — factors like recording quality, drawing conditions, and individual variability all affect reliability.</p>
+          </div>
+        </div>
+
+        <div class="nt-faq-item">
+          <button class="nt-faq-q" aria-expanded="false">
+            What do I need to complete the assessment?
+            <svg class="nt-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nt-faq-a">
+            <p>You need a device with a microphone and camera or image upload capability. For the voice step, record yourself saying "ahh" for a few seconds in a quiet environment. For the drawing step, draw a spiral, meander, or wave pattern on paper, take a clear photo, and upload it. The survey requires no special equipment.</p>
+          </div>
+        </div>
+
+        <div class="nt-faq-item">
+          <button class="nt-faq-q" aria-expanded="false">
+            How does handwriting analysis detect Parkinson's?
+            <svg class="nt-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nt-faq-a">
+            <p>Parkinson's Disease causes micrographia (small, cramped writing) and tremor, which appear as irregular spacing, waviness, and inconsistent stroke width in drawings. Our EfficientNetV2B0 vision models are trained on thousands of spiral, meander, and wave drawings from both healthy individuals and PD patients to detect these subtle motor-control signatures.</p>
+          </div>
+        </div>
+
+        <div class="nt-faq-item">
+          <button class="nt-faq-q" aria-expanded="false">
+            How does voice analysis detect Parkinson's?
+            <svg class="nt-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nt-faq-a">
+            <p>PD affects the muscles controlling speech, causing measurable changes in vocal fold vibration. Our models extract 36 acoustic features — including jitter (frequency variation), shimmer (amplitude variation), harmonic-to-noise ratio, and nonlinear dynamics measures like PPE and DFA — and classify them using Support Vector Classifiers trained on clinical voice datasets.</p>
+          </div>
+        </div>
+
+        <div class="nt-faq-item">
+          <button class="nt-faq-q" aria-expanded="false">
+            What conditions does NeuroTrace screen for?
+            <svg class="nt-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nt-faq-a">
+            <p>NeuroTrace screens for four categories: <strong>HC</strong> (Healthy Control — no detected signs), <strong>PD</strong> (Parkinson's Disease), <strong>PSP</strong> (Progressive Supranuclear Palsy), and <strong>MSA</strong> (Multiple System Atrophy). PSP and MSA are rarer parkinsonian disorders that share some motor symptoms with PD but have distinct progression patterns.</p>
+          </div>
+        </div>
+
+        <div class="nt-faq-item">
+          <button class="nt-faq-q" aria-expanded="false">
+            Is my data stored or shared?
+            <svg class="nt-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nt-faq-a">
+            <p>Audio and image files are sent to the NeuroTrace API for processing and are not permanently stored — they are discarded immediately after inference. Survey responses are processed entirely in your browser and never leave your device. No personally identifiable information is collected or retained.</p>
+          </div>
+        </div>
+
+        <div class="nt-faq-item">
+          <button class="nt-faq-q" aria-expanded="false">
+            What should I do if my results indicate risk?
+            <svg class="nt-faq-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nt-faq-a">
+            <p>A positive or uncertain result from NeuroTrace is not a diagnosis — it is a signal to seek professional evaluation. Schedule an appointment with a neurologist, ideally one specializing in movement disorders. They can perform a comprehensive clinical assessment including physical examination, imaging, and other validated tests to determine whether further investigation is warranted.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- Read Our Paper -->
   <section class="nt-section nt-section-alt" id="paper">
     <div class="nt-container">
@@ -287,6 +390,24 @@
   <footer class="nt-footer">
     <p>Conceptualized and developed in the United States &#127482;&#127480;</p>
   </footer>
+
+  <script>
+    document.querySelectorAll('.nt-faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        // Close all
+        document.querySelectorAll('.nt-faq-q').forEach(b => {
+          b.setAttribute('aria-expanded', 'false');
+          b.nextElementSibling.classList.remove('open');
+        });
+        // Open clicked (unless it was already open)
+        if (!expanded) {
+          btn.setAttribute('aria-expanded', 'true');
+          btn.nextElementSibling.classList.add('open');
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>
