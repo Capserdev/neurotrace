@@ -320,5 +320,7 @@ for _route, _file in [
     ("/stack.html",       "stack.html"),
     ("/onboarding",       "onboarding.html"),
     ("/onboarding.html",  "onboarding.html"),
+    ("/credits",          "credits.html"),
+    ("/credits.html",     "credits.html"),
 ]:
     app.add_api_route(_route, _page(_file), methods=["GET"])
