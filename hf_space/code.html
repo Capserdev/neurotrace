@@ -1,0 +1,2167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model Code &mdash; NeuroTrace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <style>
+    .code-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .code-tab-btn {
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .code-tab-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .code-tab-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .code-panel {
+      display: none;
+    }
+    .code-panel.active {
+      display: block;
+    }
+    .code-panel pre {
+      margin: 0;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      line-height: 1.6;
+      max-height: 70vh;
+      overflow: auto;
+    }
+    .code-panel pre code {
+      font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace;
+    }
+    .code-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .code-meta-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .code-meta-badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .badge-keras   { background: rgba(255,120,50,.12); color: #ff7832; border: 1px solid rgba(255,120,50,.3); }
+    .badge-sklearn { background: rgba(100,180,255,.12); color: #64b4ff; border: 1px solid rgba(100,180,255,.3); }
+    .badge-acc     { background: rgba(80,220,150,.12); color: #50dc96; border: 1px solid rgba(80,220,150,.3); }
+    .code-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+    .copy-btn {
+      margin-left: auto;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .copy-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nt-nav">
+    <div class="nt-nav-inner">
+      <a href="index.html" class="nt-logo">
+        <div class="nt-logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <path d="M2 12c2-5 4-5 6 0s4 5 6 0 2-5 4-5"/>
+          </svg>
+        </div>
+        <div class="nt-logo-text">
+          <span class="nt-logo-name">NeuroTrace</span>
+          <span class="nt-logo-sub">AI.GOV</span>
+        </div>
+      </a>
+
+      <nav class="nt-tabs">
+        <a href="index.html"             class="nt-tab">OVERVIEW</a>
+        <a href="diagnosis.html#drawing" class="nt-tab">HANDWRITING</a>
+        <a href="diagnosis.html#voice"   class="nt-tab">VOICE</a>
+        <a href="survey.html"            class="nt-tab">SURVEY</a>
+        <a href="diagnosis.html#results" class="nt-tab">REPORT</a>
+        <a href="science.html"           class="nt-tab">SCIENCE</a>
+        <a href="stack.html"             class="nt-tab">STACK</a>
+        <a href="onboarding.html"        class="nt-tab">HOW TO USE</a>
+        <a href="credits.html"           class="nt-tab">CREDITS</a>
+        <a href="code.html"              class="nt-tab active">CODE</a>
+      </nav>
+
+      <div class="nt-nav-right">
+        <a href="https://www.overleaf.com/read/tknxcgwgrdzm#3ab6db" target="_blank" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Read Our Paper
+        </a>
+        <a href="https://github.com/Capserdev/AI.Gov" target="_blank" class="nt-nav-ext">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          See Our Website Code
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <section class="nt-section">
+    <div class="nt-container">
+
+      <!-- Page heading -->
+      <div class="nt-page-head">
+        <div class="nt-page-icon">&#128187;</div>
+        <h1>Model Code</h1>
+        <p>Full training source code for all NeuroTrace models, sourced from the original Kaggle notebooks.</p>
+      </div>
+
+      <!-- Tab buttons -->
+      <div class="code-tabs">
+        <button class="code-tab-btn active" onclick="showTab('meander', this)">Meander</button>
+        <button class="code-tab-btn"        onclick="showTab('spiral', this)">Spiral</button>
+        <button class="code-tab-btn"        onclick="showTab('wave', this)">Wave</button>
+        <button class="code-tab-btn"        onclick="showTab('voice', this)">Voice Models</button>
+      </div>
+
+      <!-- Meander Panel -->
+      <div class="code-panel active" id="panel-meander">
+        <div class="code-meta">
+          <div class="code-meta-title">Meander Model</div>
+          <span class="code-meta-badge badge-keras">TensorFlow / Keras</span>
+          <span class="code-meta-badge badge-acc">Accuracy 94.59%</span>
+          <button class="copy-btn" onclick="copyCode('meander-code')">Copy</button>
+        </div>
+        <div class="code-desc">
+          EfficientNetV2B0 pretrained on ImageNet, fine-tuned on the HandPD meander dataset.
+          Two-phase training: head-only (Adam 1e-3, 6 epochs) then full fine-tune (Adam 1e-5, 6 epochs).
+          No augmentation — meander images are structurally invariant to flip/rotation.
+          Final test set: N=74, Accuracy 94.59%, PD F1=0.97.
+        </div>
+        <pre><code class="language-python" id="meander-code">
+import os, random
+import numpy as np
+from collections import Counter
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (
+    classification_report,
+    confusion_matrix,
+    accuracy_score,
+    roc_curve,
+    roc_auc_score,
+)
+
+import tensorflow as tf
+from tensorflow.keras import layers, models, optimizers, callbacks
+from tensorflow.keras.applications import EfficientNetV2B0
+from tensorflow.keras.applications.efficientnet_v2 import preprocess_input
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+
+MEANDER_ROOT = &quot;/kaggle/input/meander-handpd-zip&quot;
+
+
+IMG_SIZE    = 224
+BATCH       = 16
+EPOCHS_HEAD = 6
+EPOCHS_FINE = 6
+SEED        = 42
+
+random.seed(SEED)
+np.random.seed(SEED)
+tf.random.set_seed(SEED)
+
+print(&quot;TF version:&quot;, tf.__version__)
+print(&quot;GPUs:&quot;, tf.config.experimental.list_physical_devices(&#x27;GPU&#x27;))
+
+try:
+    tf.config.optimizer.set_jit(False)
+except Exception:
+    pass
+
+
+gpus = tf.config.experimental.list_physical_devices(&#x27;GPU&#x27;)
+if gpus:
+    for g in gpus:
+        try:
+            tf.config.experimental.set_memory_growth(g, True)
+        except Exception:
+            pass
+
+
+
+def load_folder_rgb(path, label, target_size=(IMG_SIZE, IMG_SIZE)):
+    &quot;&quot;&quot;Load all images in path as float32 RGB (0..255).&quot;&quot;&quot;
+    xs, ys = [], []
+    if not os.path.exists(path):
+        return xs, ys
+    files = sorted(os.listdir(path))
+    for f in files:
+        if f.lower().endswith((&quot;.png&quot;, &quot;.jpg&quot;, &quot;.jpeg&quot;)):
+            p = os.path.join(path, f)
+            try:
+                im = load_img(p, color_mode=&quot;rgb&quot;, target_size=target_size)
+                a = img_to_array(im).astype(&quot;float32&quot;)  # 0..255
+                xs.append(a)
+                ys.append(label)
+            except Exception:
+                pass
+    return xs, ys
+
+def summarize_labels(y, name):
+    c = Counter(y)
+    print(f&quot;{name} labels:&quot;, dict(c))
+
+def build_effnet_b0_model(name=&quot;EffNetV2B0_Model&quot;):
+    base = EfficientNetV2B0(
+        include_top=False,
+        weights=&quot;imagenet&quot;,
+        input_shape=(IMG_SIZE, IMG_SIZE, 3),
+    )
+    base.trainable = False  # start frozen
+
+    inputs = layers.Input(shape=(IMG_SIZE, IMG_SIZE, 3), name=&quot;img&quot;)
+    x = preprocess_input(inputs)
+    x = base(x, training=False)
+    x = layers.GlobalAveragePooling2D()(x)
+    x = layers.Dropout(0.4)(x)
+    x = layers.Dense(
+        256,
+        activation=&quot;relu&quot;,
+        kernel_regularizer=tf.keras.regularizers.l2(1e-4),
+    )(x)
+    x = layers.Dropout(0.4)(x)
+    outputs = layers.Dense(1, activation=&quot;sigmoid&quot;)(x)
+    model = models.Model(inputs, outputs, name=name)
+    return model, base
+
+def train_head_and_finetune(
+    model,
+    base,
+    X_tr,
+    y_tr,
+    X_val,
+    y_val,
+    class_weight,
+    model_prefix,
+    epochs_head=EPOCHS_HEAD,
+    epochs_fine=EPOCHS_FINE,
+):
+   
+    base.trainable = False
+    model.compile(
+        optimizer=optimizers.Adam(1e-3),
+        loss=&quot;binary_crossentropy&quot;,
+        metrics=[&quot;accuracy&quot;],
+    )
+    ckpt_head = f&quot;/kaggle/working/{model_prefix}_head_best.keras&quot;
+    es = callbacks.EarlyStopping(
+        monitor=&quot;val_loss&quot;, patience=4, restore_best_weights=True, verbose=1
+    )
+    rl = callbacks.ReduceLROnPlateau(
+        monitor=&quot;val_loss&quot;, factor=0.3, patience=2, verbose=1
+    )
+    mc = callbacks.ModelCheckpoint(
+        ckpt_head, monitor=&quot;val_loss&quot;, save_best_only=True, verbose=1
+    )
+
+    print(f&quot;\n=== HEAD TRAINING for {model_prefix} ===&quot;)
+    hist_head = model.fit(
+        X_tr,
+        y_tr,
+        validation_data=(X_val, y_val),
+        epochs=epochs_head,
+        batch_size=BATCH,
+        class_weight=class_weight,
+        callbacks=[es, rl, mc],
+        verbose=2,
+    )
+
+    
+    print(f&quot;\nUnfreezing backbone for {model_prefix} ...&quot;)
+    base.trainable = True
+    for layer in base.layers:
+        if isinstance(layer, layers.BatchNormalization):
+            layer.trainable = False
+
+    model.compile(
+        optimizer=optimizers.Adam(1e-5),
+        loss=&quot;binary_crossentropy&quot;,
+        metrics=[&quot;accuracy&quot;],
+    )
+    ckpt_fine = f&quot;/kaggle/working/{model_prefix}_finetune_best.keras&quot;
+    es2 = callbacks.EarlyStopping(
+        monitor=&quot;val_loss&quot;, patience=4, restore_best_weights=True, verbose=1
+    )
+    rl2 = callbacks.ReduceLROnPlateau(
+        monitor=&quot;val_loss&quot;, factor=0.3, patience=2, verbose=1
+    )
+    mc2 = callbacks.ModelCheckpoint(
+        ckpt_fine, monitor=&quot;val_loss&quot;, save_best_only=True, verbose=1
+    )
+
+    print(f&quot;\n=== FINE-TUNING for {model_prefix} ===&quot;)
+    hist_fine = model.fit(
+        X_tr,
+        y_tr,
+        validation_data=(X_val, y_val),
+        epochs=epochs_fine,
+        batch_size=BATCH,
+        class_weight=class_weight,
+        callbacks=[es2, rl2, mc2],
+        verbose=2,
+    )
+
+    if os.path.exists(ckpt_fine):
+        model = models.load_model(ckpt_fine)
+    elif os.path.exists(ckpt_head):
+        model = models.load_model(ckpt_head)
+
+    return model, hist_head, hist_fine
+
+def eval_model(model, X, y, name=&quot;&quot;):
+    if len(y) == 0:
+        print(f&quot;{name}: NO DATA&quot;)
+        return
+    preds_prob = model.predict(X, batch_size=BATCH, verbose=0).ravel()
+    preds = (preds_prob &gt; 0.5).astype(int)
+    acc = accuracy_score(y, preds)
+    print(f&quot;\n{name} accuracy: {acc*100:.2f}%   (N={len(y)})&quot;)
+    print(classification_report(y, preds, target_names=[&quot;Healthy&quot;,&quot;Parkinson&quot;]))
+    cm = confusion_matrix(y, preds)
+    plt.figure(figsize=(4,3))
+    sns.heatmap(
+        cm, annot=True, fmt=&quot;d&quot;, cmap=&quot;Blues&quot;,
+        xticklabels=[&quot;H&quot;,&quot;P&quot;], yticklabels=[&quot;H&quot;,&quot;P&quot;]
+    )
+    plt.title(f&quot;{name} Confusion Matrix&quot;)
+    plt.xlabel(&quot;Predicted&quot;)
+    plt.ylabel(&quot;True&quot;)
+    plt.tight_layout()
+    plt.show()
+    try:
+        fpr, tpr, _ = roc_curve(y, preds_prob)
+        auc = roc_auc_score(y, preds_prob)
+        plt.figure(figsize=(4,3))
+        plt.plot(fpr, tpr, label=f&quot;AUC={auc:.3f}&quot;)
+        plt.plot([0,1],[0,1],&#x27;k--&#x27;)
+        plt.title(f&quot;{name} ROC&quot;)
+        plt.xlabel(&quot;FPR&quot;)
+        plt.ylabel(&quot;TPR&quot;)
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+    except Exception as e:
+        print(f&quot;{name} ROC error:&quot;, e)
+
+
+print(&quot;\n=== LOADING MEANDER DATA ===&quot;)
+me_c, me_cy = load_folder_rgb(os.path.join(MEANDER_ROOT, &quot;MeanderControl&quot;), 0)
+me_p, me_py = load_folder_rgb(os.path.join(MEANDER_ROOT, &quot;MeanderPatients&quot;), 1)
+
+me_X = me_c + me_p
+me_y = me_cy + me_py
+
+print(&quot;Meander total:&quot;, len(me_X),
+      f&quot;(healthy {len(me_c)} parkinson {len(me_p)} )&quot;)
+summarize_labels(me_y, &quot;Meander&quot;)
+
+me_X = np.array(me_X, dtype=&quot;float32&quot;)
+me_y = np.array(me_y, dtype=&quot;int32&quot;)
+
+
+X_temp_m, X_test_m, y_temp_m, y_test_m = train_test_split(
+    me_X, me_y, test_size=0.2, stratify=me_y, random_state=SEED
+)
+X_train_m, X_val_m, y_train_m, y_val_m = train_test_split(
+    X_temp_m, y_temp_m, test_size=0.15, stratify=y_temp_m, random_state=SEED
+)
+
+print(&quot;Meander train:&quot;, len(y_train_m),
+      &quot;val:&quot;, len(y_val_m), &quot;test:&quot;, len(y_test_m))
+
+cnt_m = Counter(y_train_m)
+cw_meander = {
+    cls: (sum(cnt_m.values()) / (len(cnt_m) * count))
+    for cls, count in cnt_m.items()
+}
+print(&quot;Meander class_weight:&quot;, cw_meander)
+
+print(&quot;\n=== BUILDING MEANDER MODEL ===&quot;)
+me_model, me_base = build_effnet_b0_model(name=&quot;MeanderModel&quot;)
+me_model.summary()
+
+me_model, me_hist_head, me_hist_fine = train_head_and_finetune(
+    me_model,
+    me_base,
+    X_train_m, y_train_m,
+    X_val_m,   y_val_m,
+    cw_meander,
+    model_prefix=&quot;MeanderModel&quot;,
+)
+
+print(&quot;\n=== EVALUATING MEANDER MODEL ===&quot;)
+eval_model(me_model, X_test_m, y_test_m, name=&quot;Meander Test&quot;)
+
+print(&quot;\n=== MEANDER DONE ===&quot;)</code></pre>
+      </div>
+
+      <!-- Spiral Panel -->
+      <div class="code-panel" id="panel-spiral">
+        <div class="code-meta">
+          <div class="code-meta-title">Spiral Model</div>
+          <span class="code-meta-badge badge-keras">TensorFlow / Keras</span>
+          <span class="code-meta-badge badge-acc">Accuracy 90.00%</span>
+          <button class="copy-btn" onclick="copyCode('spiral-code')">Copy</button>
+        </div>
+        <div class="code-desc">
+          EfficientNetV2B0 with data augmentation (RandomRotation, RandomZoom, RandomTranslation — no flips to preserve handedness cues).
+          Trained as a 2-model ensemble (seeds 42 &amp; 123) with label smoothing (0.01).
+          Threshold tuned on validation set; 4-pass TTA at inference.
+          Dataset: HandPD + Archive-3 spirals with 3&times; oversampling of handwriting samples.
+          Final test set: N=90, Accuracy 90.00%, F1=0.90.
+        </div>
+        <pre><code class="language-python" id="spiral-code">
+
+import os, random
+import numpy as np
+from collections import Counter
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (
+    classification_report,
+    confusion_matrix,
+    accuracy_score,
+    roc_curve,
+    roc_auc_score,
+)
+
+import tensorflow as tf
+from tensorflow.keras import layers, models, optimizers, callbacks
+from tensorflow.keras.applications import EfficientNetV2B0
+from tensorflow.keras.applications.efficientnet_v2 import preprocess_input
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+
+
+HAND_BASE = &quot;/kaggle/input/parkinsons-dataset-handwriting/Parkinson Dataset/dataset&quot;
+
+ARCH3_CANDIDATES = [
+    &quot;/kaggle/input/archive-3&quot;,
+    &quot;/kaggle/input/parkinsons-archive-3&quot;,
+]
+ARCH3_ROOT = None
+for cand in ARCH3_CANDIDATES:
+    if os.path.isdir(cand):
+        if os.path.isdir(os.path.join(cand, &quot;spiral&quot;)) or os.path.isdir(os.path.join(cand, &quot;drawings&quot;)):
+            ARCH3_ROOT = cand
+            break
+
+print(&quot;Detected ARCH3_ROOT:&quot;, ARCH3_ROOT)
+
+
+IMG_SIZE    = 224
+BATCH       = 8
+EPOCHS_HEAD = 20
+EPOCHS_FINE = 15
+
+GLOBAL_SEED = 42
+random.seed(GLOBAL_SEED)
+np.random.seed(GLOBAL_SEED)
+tf.random.set_seed(GLOBAL_SEED)
+
+print(&quot;TF version:&quot;, tf.__version__)
+print(&quot;GPUs:&quot;, tf.config.experimental.list_physical_devices(&#x27;GPU&#x27;))
+
+try:
+    tf.config.optimizer.set_jit(False)
+except Exception:
+    pass
+
+gpus = tf.config.experimental.list_physical_devices(&quot;GPU&quot;)
+if gpus:
+    for g in gpus:
+        try:
+            tf.config.experimental.set_memory_growth(g, True)
+        except Exception:
+            pass
+
+
+def set_all_seeds(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    tf.random.set_seed(seed)
+
+def load_folder_rgb(path, label, target_size=(IMG_SIZE, IMG_SIZE)):
+    xs, ys = [], []
+    if not os.path.exists(path):
+        return xs, ys
+    for f in sorted(os.listdir(path)):
+        if f.lower().endswith((&quot;.png&quot;, &quot;.jpg&quot;, &quot;.jpeg&quot;)):
+            p = os.path.join(path, f)
+            try:
+                im = load_img(p, color_mode=&quot;rgb&quot;, target_size=target_size)
+                a = img_to_array(im).astype(&quot;float32&quot;)  # 0..255
+                xs.append(a)
+                ys.append(label)
+            except Exception:
+                pass
+    return xs, ys
+
+def summarize_labels(y, name):
+    c = Counter(y)
+    print(f&quot;{name} labels:&quot;, dict(c))
+
+
+data_augment_spiral = tf.keras.Sequential(
+    [
+        layers.RandomRotation(0.12),
+        layers.RandomZoom(0.12),
+        layers.RandomTranslation(0.08, 0.08),
+        
+    ],
+    name=&quot;data_augment_spiral&quot;,
+)
+
+def build_effnet_b0_spiral(name=&quot;SpiralModel&quot;):
+    base = EfficientNetV2B0(
+        include_top=False,
+        weights=&quot;imagenet&quot;,
+        input_shape=(IMG_SIZE, IMG_SIZE, 3),
+    )
+    base.trainable = False
+
+    inputs = layers.Input(shape=(IMG_SIZE, IMG_SIZE, 3), name=&quot;img&quot;)
+    x = data_augment_spiral(inputs)
+    x = preprocess_input(x)
+    x = base(x, training=False)
+    x = layers.GlobalAveragePooling2D()(x)
+    x = layers.Dropout(0.3)(x)
+    x = layers.Dense(
+        256,
+        activation=&quot;relu&quot;,
+        kernel_regularizer=tf.keras.regularizers.l2(5e-5),
+    )(x)
+    x = layers.Dropout(0.3)(x)
+    outputs = layers.Dense(1, activation=&quot;sigmoid&quot;)(x)
+    model = models.Model(inputs, outputs, name=name)
+    return model, base
+
+def tta_probs(model, X, batch_size=BATCH):
+    &quot;&quot;&quot;TTA: original + hflip + 90° + 270°.&quot;&quot;&quot;
+    if len(X) == 0:
+        return np.zeros((0,), dtype=&quot;float32&quot;)
+
+    preds = []
+
+    # original
+    preds.append(model.predict(X, batch_size=batch_size, verbose=0).ravel())
+
+    # horizontal flip
+    X_hf = X[:, :, ::-1, :]
+    preds.append(model.predict(X_hf, batch_size=batch_size, verbose=0).ravel())
+
+    # rotate 90° ccw
+    X_r1 = np.rot90(X, k=1, axes=(1, 2))
+    preds.append(model.predict(X_r1, batch_size=batch_size, verbose=0).ravel())
+
+    # rotate 90° cw
+    X_r3 = np.rot90(X, k=3, axes=(1, 2))
+    preds.append(model.predict(X_r3, batch_size=batch_size, verbose=0).ravel())
+
+    return np.mean(preds, axis=0)
+
+def train_head_and_finetune(
+    model,
+    base,
+    X_tr,
+    y_tr,
+    X_val,
+    y_val,
+    class_weight,
+    model_prefix,
+    epochs_head=EPOCHS_HEAD,
+    epochs_fine=EPOCHS_FINE,
+):
+   
+    base.trainable = False
+    loss_fn = tf.keras.losses.BinaryCrossentropy(label_smoothing=0.01)
+    model.compile(
+        optimizer=optimizers.Adam(1e-3),
+        loss=loss_fn,
+        metrics=[&quot;accuracy&quot;],
+    )
+
+    ckpt_head = f&quot;/kaggle/working/{model_prefix}_head_best.keras&quot;
+    es = callbacks.EarlyStopping(
+        monitor=&quot;val_loss&quot;, patience=6, restore_best_weights=True, verbose=1
+    )
+    rl = callbacks.ReduceLROnPlateau(
+        monitor=&quot;val_loss&quot;, factor=0.3, patience=3, verbose=1
+    )
+    mc = callbacks.ModelCheckpoint(
+        ckpt_head, monitor=&quot;val_loss&quot;, save_best_only=True, verbose=1
+    )
+
+    print(f&quot;\n=== HEAD TRAINING for {model_prefix} ===&quot;)
+    hist_head = model.fit(
+        X_tr,
+        y_tr,
+        validation_data=(X_val, y_val),
+        epochs=epochs_head,
+        batch_size=BATCH,
+        class_weight=class_weight,
+        callbacks=[es, rl, mc],
+        verbose=2,
+    )
+
+    
+    print(f&quot;\nUnfreezing backbone for {model_prefix} ...&quot;)
+    base.trainable = True
+    for layer in base.layers:
+        if isinstance(layer, layers.BatchNormalization):
+            layer.trainable = False
+
+    model.compile(
+        optimizer=optimizers.Adam(3e-5),
+        loss=loss_fn,
+        metrics=[&quot;accuracy&quot;],
+    )
+
+    ckpt_fine = f&quot;/kaggle/working/{model_prefix}_finetune_best.keras&quot;
+    es2 = callbacks.EarlyStopping(
+        monitor=&quot;val_loss&quot;, patience=6, restore_best_weights=True, verbose=1
+    )
+    rl2 = callbacks.ReduceLROnPlateau(
+        monitor=&quot;val_loss&quot;, factor=0.3, patience=3, verbose=1
+    )
+    mc2 = callbacks.ModelCheckpoint(
+        ckpt_fine, monitor=&quot;val_loss&quot;, save_best_only=True, verbose=1
+    )
+
+    print(f&quot;\n=== FINE-TUNING for {model_prefix} ===&quot;)
+    hist_fine = model.fit(
+        X_tr,
+        y_tr,
+        validation_data=(X_val, y_val),
+        epochs=epochs_fine,
+        batch_size=BATCH,
+        class_weight=class_weight,
+        callbacks=[es2, rl2, mc2],
+        verbose=2,
+    )
+
+    if os.path.exists(ckpt_fine):
+        model = models.load_model(ckpt_fine)
+    elif os.path.exists(ckpt_head):
+        model = models.load_model(ckpt_head)
+
+    return model, hist_head, hist_fine
+
+def eval_ensemble_with_threshold_and_tta(
+    models, X_val, y_val, X_tests, y_tests, names
+):
+    
+    val_probs_list = [tta_probs(m, X_val) for m in models]
+    val_probs = np.mean(val_probs_list, axis=0)
+
+    thresholds = np.linspace(0.2, 0.8, 61)
+    best_thr = 0.5
+    best_acc = 0.0
+    for thr in thresholds:
+        preds = (val_probs &gt; thr).astype(int)
+        acc = accuracy_score(y_val, preds)
+        if acc &gt; best_acc:
+            best_acc = acc
+            best_thr = thr
+    print(f&quot;\n[Spiral ENSEMBLE] Best val-threshold = {best_thr:.3f} with val accuracy = {best_acc*100:.2f}%&quot;)
+
+    
+    for X_test, y_test, name in zip(X_tests, y_tests, names):
+        if len(y_test) == 0:
+            print(f&quot;{name}: NO DATA&quot;)
+            continue
+        probs_list = [tta_probs(m, X_test) for m in models]
+        probs = np.mean(probs_list, axis=0)
+        preds = (probs &gt; best_thr).astype(int)
+        acc = accuracy_score(y_test, preds)
+        print(f&quot;\n{name} (ENSEMBLE thr={best_thr:.3f} + TTA) accuracy: {acc*100:.2f}%   (N={len(y_test)})&quot;)
+        print(classification_report(y_test, preds, target_names=[&quot;Healthy&quot;,&quot;Parkinson&quot;]))
+        cm = confusion_matrix(y_test, preds)
+        plt.figure(figsize=(4,3))
+        sns.heatmap(
+            cm, annot=True, fmt=&quot;d&quot;, cmap=&quot;Blues&quot;,
+            xticklabels=[&quot;H&quot;,&quot;P&quot;], yticklabels=[&quot;H&quot;,&quot;P&quot;]
+        )
+        plt.title(f&quot;{name} Confusion Matrix (Ensemble)&quot;)
+        plt.xlabel(&quot;Predicted&quot;)
+        plt.ylabel(&quot;True&quot;)
+        plt.tight_layout()
+        plt.show()
+
+        try:
+            fpr, tpr, _ = roc_curve(y_test, probs)
+            auc = roc_auc_score(y_test, probs)
+            plt.figure(figsize=(4,3))
+            plt.plot(fpr, tpr, label=f&quot;AUC={auc:.3f}&quot;)
+            plt.plot([0,1],[0,1],&#x27;k--&#x27;)
+            plt.title(f&quot;{name} ROC (Ensemble)&quot;)
+            plt.xlabel(&quot;FPR&quot;)
+            plt.ylabel(&quot;TPR&quot;)
+            plt.legend()
+            plt.tight_layout()
+            plt.show()
+        except Exception as e:
+            print(f&quot;{name} ROC error:&quot;, e)
+
+
+print(&quot;\n=== LOADING SPIRAL DATA ===&quot;)
+
+sp_tr_h, sp_tr_hy = load_folder_rgb(
+    os.path.join(HAND_BASE, &quot;spiral&quot;, &quot;training&quot;, &quot;healthy&quot;), 0
+)
+sp_tr_p, sp_tr_py = load_folder_rgb(
+    os.path.join(HAND_BASE, &quot;spiral&quot;, &quot;training&quot;, &quot;parkinson&quot;), 1
+)
+sp_te_h, sp_te_hy = load_folder_rgb(
+    os.path.join(HAND_BASE, &quot;spiral&quot;, &quot;testing&quot;, &quot;healthy&quot;), 0
+)
+sp_te_p, sp_te_py = load_folder_rgb(
+    os.path.join(HAND_BASE, &quot;spiral&quot;, &quot;testing&quot;, &quot;parkinson&quot;), 1
+)
+
+hw_spiral_train_X = sp_tr_h + sp_tr_p
+hw_spiral_train_y = sp_tr_hy + sp_tr_py
+hw_spiral_test_X  = sp_te_h + sp_te_p
+hw_spiral_test_y  = sp_te_hy + sp_te_py
+
+print(&quot;Handwriting spiral train:&quot;, len(hw_spiral_train_y),
+      &quot;test:&quot;, len(hw_spiral_test_y))
+
+
+arch3_spiral_train_X, arch3_spiral_train_y = [], []
+arch3_spiral_test_X,  arch3_spiral_test_y  = [], []
+
+if ARCH3_ROOT is not None:
+   
+    a3_sp_tr_h, a3_sp_tr_hy = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;spiral&quot;, &quot;training&quot;, &quot;healthy&quot;), 0
+    )
+    a3_sp_tr_p, a3_sp_tr_py = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;spiral&quot;, &quot;training&quot;, &quot;parkinson&quot;), 1
+    )
+    a3_sp_dr_tr_h, a3_sp_dr_tr_hy = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;drawings&quot;, &quot;spiral&quot;, &quot;training&quot;, &quot;healthy&quot;), 0
+    )
+    a3_sp_dr_tr_p, a3_sp_dr_tr_py = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;drawings&quot;, &quot;spiral&quot;, &quot;training&quot;, &quot;parkinson&quot;), 1
+    )
+
+    arch3_spiral_train_X = (
+        a3_sp_tr_h + a3_sp_tr_p + a3_sp_dr_tr_h + a3_sp_dr_tr_p
+    )
+    arch3_spiral_train_y = (
+        a3_sp_tr_hy + a3_sp_tr_py + a3_sp_dr_tr_hy + a3_sp_dr_tr_py
+    )
+
+    
+    a3_sp_te_h, a3_sp_te_hy = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;spiral&quot;, &quot;testing&quot;, &quot;healthy&quot;), 0
+    )
+    a3_sp_te_p, a3_sp_te_py = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;spiral&quot;, &quot;testing&quot;, &quot;parkinson&quot;), 1
+    )
+    a3_sp_dr_te_h, a3_sp_dr_te_hy = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;drawings&quot;, &quot;spiral&quot;, &quot;testing&quot;, &quot;healthy&quot;), 0
+    )
+    a3_sp_dr_te_p, a3_sp_dr_te_py = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;drawings&quot;, &quot;spiral&quot;, &quot;testing&quot;, &quot;parkinson&quot;), 1
+    )
+
+    arch3_spiral_test_X = (
+        a3_sp_te_h + a3_sp_te_p + a3_sp_dr_te_h + a3_sp_dr_te_p
+    )
+    arch3_spiral_test_y = (
+        a3_sp_te_hy + a3_sp_te_py + a3_sp_dr_te_hy + a3_sp_dr_te_py
+    )
+
+print(&quot;Archive3 spiral train:&quot;, len(arch3_spiral_train_y),
+      &quot;test:&quot;, len(arch3_spiral_test_y))
+
+
+X_all_train_list = hw_spiral_train_X + arch3_spiral_train_X
+y_all_train_list = hw_spiral_train_y + arch3_spiral_train_y
+dom_all_list     = [0]*len(hw_spiral_train_y) + [1]*len(arch3_spiral_train_y)  # 0=HW, 1=Arch3
+
+X_all = np.array(X_all_train_list, dtype=&quot;float32&quot;)
+y_all = np.array(y_all_train_list, dtype=&quot;int32&quot;)
+dom_all = np.array(dom_all_list, dtype=&quot;int32&quot;)
+
+print(&quot;Spiral TOTAL train (real):&quot;, len(y_all))
+summarize_labels(y_all, &quot;Spiral total (real)&quot;)
+
+
+group_label = y_all + 2*dom_all  # 0: HW_H, 1: HW_P, 2: A3_H, 3: A3_P
+
+X_train_raw, X_val_sp, y_train_raw, y_val_sp, dom_train_raw, dom_val = train_test_split(
+    X_all, y_all, dom_all,
+    test_size=0.20,
+    stratify=group_label,
+    random_state=GLOBAL_SEED,
+)
+
+print(&quot;Raw Spiral train (pre-oversample):&quot;, len(y_train_raw),
+      &quot;val:&quot;, len(y_val_sp))
+
+
+hw_factor = 3  # keep as before
+indices = np.arange(len(y_train_raw))
+idx_hw   = indices[dom_train_raw == 0]
+idx_a3   = indices[dom_train_raw == 1]
+
+X_train_list = []
+y_train_list = []
+
+
+for i in indices:
+    X_train_list.append(X_train_raw[i])
+    y_train_list.append(y_train_raw[i])
+
+
+for i in idx_hw:
+    for _ in range(hw_factor - 1):
+        X_train_list.append(X_train_raw[i])
+        y_train_list.append(y_train_raw[i])
+
+X_train_sp = np.array(X_train_list, dtype=&quot;float32&quot;)
+y_train_sp = np.array(y_train_list, dtype=&quot;int32&quot;)
+
+print(&quot;Spiral train AFTER HW oversample:&quot;, len(y_train_sp))
+summarize_labels(y_train_sp, &quot;Spiral train (oversampled HW)&quot;)
+
+cnt_sp = Counter(y_train_sp)
+cw_spiral = {
+    cls: (sum(cnt_sp.values()) / (len(cnt_sp) * count))
+    for cls, count in cnt_sp.items()
+}
+print(&quot;Spiral class_weight:&quot;, cw_spiral)
+
+
+X_test_hw_sp = np.array(hw_spiral_test_X, dtype=&quot;float32&quot;)
+y_test_hw_sp = np.array(hw_spiral_test_y, dtype=&quot;int32&quot;)
+
+if len(arch3_spiral_test_X) &gt; 0:
+    X_test_a3_sp = np.array(arch3_spiral_test_X, dtype=&quot;float32&quot;)
+    y_test_a3_sp = np.array(arch3_spiral_test_y, dtype=&quot;int32&quot;)
+else:
+    X_test_a3_sp = np.zeros((0, IMG_SIZE, IMG_SIZE, 3), dtype=&quot;float32&quot;)
+    y_test_a3_sp = np.zeros((0,), dtype=&quot;int32&quot;)
+
+X_test_sp_all = np.concatenate([X_test_hw_sp, X_test_a3_sp], axis=0)
+y_test_sp_all = np.concatenate([y_test_hw_sp, y_test_a3_sp], axis=0)
+
+print(&quot;Spiral combined test:&quot;, len(y_test_sp_all))
+
+
+
+models_spiral = []
+seeds_for_models = [42, 123]  # you can add another seed if runtime allows
+
+for i, s in enumerate(seeds_for_models, start=1):
+    print(f&quot;\n\n############################&quot;)
+    print(f&quot;### TRAINING SPIRAL MODEL {i} with seed {s}&quot;)
+    print(f&quot;############################\n&quot;)
+    set_all_seeds(s)
+    spiral_model, spiral_base = build_effnet_b0_spiral(name=f&quot;SpiralModel_{i}&quot;)
+    spiral_model, sp_hist_head, sp_hist_fine = train_head_and_finetune(
+        spiral_model,
+        spiral_base,
+        X_train_sp, y_train_sp,
+        X_val_sp,   y_val_sp,
+        cw_spiral,
+        model_prefix=f&quot;SpiralModel_{i}&quot;,
+    )
+    models_spiral.append(spiral_model)
+
+
+print(&quot;\n=== EVALUATING SPIRAL ENSEMBLE (threshold-tuned + TTA) ===&quot;)
+eval_ensemble_with_threshold_and_tta(
+    models_spiral,
+    X_val_sp, y_val_sp,
+    [X_test_hw_sp, X_test_a3_sp, X_test_sp_all],
+    [y_test_hw_sp, y_test_a3_sp, y_test_sp_all],
+    [&quot;HW Spiral Test&quot;, &quot;Archive3 Spiral Test&quot;, &quot;Spiral Combined Test&quot;],
+)
+
+print(&quot;\n=== SPIRAL ENSEMBLE DONE ===&quot;)
+</code></pre>
+      </div>
+
+      <!-- Wave Panel -->
+      <div class="code-panel" id="panel-wave">
+        <div class="code-meta">
+          <div class="code-meta-title">Wave Model</div>
+          <span class="code-meta-badge badge-keras">TensorFlow / Keras</span>
+          <span class="code-meta-badge badge-acc">Accuracy 93.33%</span>
+          <button class="copy-btn" onclick="copyCode('wave-code')">Copy</button>
+        </div>
+        <div class="code-desc">
+          EfficientNetV2B0 with an augmented pipeline including RandomRotation, RandomZoom, RandomTranslation,
+          RandomContrast, and RandomBrightness — broader than the spiral model due to wave drawing variability.
+          Single model (seed 42), 4-pass TTA. Dataset: HandPD + Archive-3 wave with 3&times; oversampling; 90/10 split.
+          Final test set: N=90, Accuracy 93.33%.
+        </div>
+        <pre><code class="language-python" id="wave-code">
+
+import os, random
+import numpy as np
+from collections import Counter
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (
+    classification_report,
+    confusion_matrix,
+    accuracy_score,
+    roc_curve,
+    roc_auc_score,
+)
+
+import tensorflow as tf
+from tensorflow.keras import layers, models, optimizers, callbacks
+from tensorflow.keras.applications import EfficientNetV2B0
+from tensorflow.keras.applications.efficientnet_v2 import preprocess_input
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+
+
+HAND_BASE = &quot;/kaggle/input/parkinsons-dataset-handwriting/Parkinson Dataset/dataset&quot;
+
+
+ARCH3_CANDIDATES = [
+    &quot;/kaggle/input/archive-3&quot;,
+    &quot;/kaggle/input/parkinsons-archive-3&quot;,
+]
+ARCH3_ROOT = None
+for cand in ARCH3_CANDIDATES:
+    if os.path.isdir(cand):
+       
+        if os.path.isdir(os.path.join(cand, &quot;wave&quot;)) or os.path.isdir(os.path.join(cand, &quot;drawings&quot;)):
+            ARCH3_ROOT = cand
+            break
+
+print(&quot;Detected ARCH3_ROOT:&quot;, ARCH3_ROOT)
+
+
+IMG_SIZE    = 224
+BATCH       = 16
+EPOCHS_HEAD = 20
+EPOCHS_FINE = 15
+SEED        = 42
+
+random.seed(SEED)
+np.random.seed(SEED)
+tf.random.set_seed(SEED)
+
+print(&quot;TF version:&quot;, tf.__version__)
+print(&quot;GPUs:&quot;, tf.config.experimental.list_physical_devices(&quot;GPU&quot;))
+
+try:
+    tf.config.optimizer.set_jit(False)
+except Exception:
+    pass
+
+gpus = tf.config.experimental.list_physical_devices(&quot;GPU&quot;)
+if gpus:
+    for g in gpus:
+        try:
+            tf.config.experimental.set_memory_growth(g, True)
+        except Exception:
+            pass
+
+
+def load_folder_rgb(path, label, target_size=(IMG_SIZE, IMG_SIZE)):
+    xs, ys = [], []
+    if not os.path.exists(path):
+        return xs, ys
+    for f in sorted(os.listdir(path)):
+        if f.lower().endswith((&quot;.png&quot;, &quot;.jpg&quot;, &quot;.jpeg&quot;)):
+            p = os.path.join(path, f)
+            try:
+                im = load_img(p, color_mode=&quot;rgb&quot;, target_size=target_size)
+                a = img_to_array(im).astype(&quot;float32&quot;)  # 0..255
+                xs.append(a)
+                ys.append(label)
+            except Exception:
+                pass
+    return xs, ys
+
+def summarize_labels(y, name):
+    c = Counter(y)
+    print(f&quot;{name} labels:&quot;, dict(c))
+
+data_augment_wave = tf.keras.Sequential(
+    [
+        layers.RandomRotation(0.10),
+        layers.RandomZoom(0.10),
+        layers.RandomTranslation(0.08, 0.08),
+        layers.RandomContrast(0.10),
+        layers.RandomBrightness(0.10),
+        
+    ],
+    name=&quot;data_augment_wave&quot;,
+)
+
+def build_effnet_b0_wave(name=&quot;WaveModel&quot;):
+    base = EfficientNetV2B0(
+        include_top=False,
+        weights=&quot;imagenet&quot;,
+        input_shape=(IMG_SIZE, IMG_SIZE, 3),
+    )
+    base.trainable = False
+
+    inputs = layers.Input(shape=(IMG_SIZE, IMG_SIZE, 3), name=&quot;img&quot;)
+    x = data_augment_wave(inputs)
+    x = preprocess_input(x)
+    x = base(x, training=False)
+    x = layers.GlobalAveragePooling2D()(x)
+    x = layers.Dropout(0.4)(x)
+    x = layers.Dense(
+        256,
+        activation=&quot;relu&quot;,
+        kernel_regularizer=tf.keras.regularizers.l2(1e-4),
+    )(x)
+    x = layers.Dropout(0.4)(x)
+    outputs = layers.Dense(1, activation=&quot;sigmoid&quot;)(x)
+    model = models.Model(inputs, outputs, name=name)
+    return model, base
+
+def tta_probs(model, X, batch_size=BATCH):
+    &quot;&quot;&quot;TTA: original + hflip + 90° + 270°.&quot;&quot;&quot;
+    if len(X) == 0:
+        return np.zeros((0,), dtype=&quot;float32&quot;)
+
+    preds = []
+
+    
+    preds.append(model.predict(X, batch_size=batch_size, verbose=0).ravel())
+
+   
+    X_hf = X[:, :, ::-1, :]
+    preds.append(model.predict(X_hf, batch_size=batch_size, verbose=0).ravel())
+
+  
+    X_r1 = np.rot90(X, k=1, axes=(1, 2))
+    preds.append(model.predict(X_r1, batch_size=batch_size, verbose=0).ravel())
+
+   
+    X_r3 = np.rot90(X, k=3, axes=(1, 2))
+    preds.append(model.predict(X_r3, batch_size=batch_size, verbose=0).ravel())
+
+    return np.mean(preds, axis=0)
+
+def train_head_and_finetune(
+    model,
+    base,
+    X_tr,
+    y_tr,
+    X_val,
+    y_val,
+    class_weight,
+    model_prefix,
+    epochs_head=EPOCHS_HEAD,
+    epochs_fine=EPOCHS_FINE,
+):
+  
+    base.trainable = False
+    loss_fn = tf.keras.losses.BinaryCrossentropy(label_smoothing=0.01)
+    model.compile(
+        optimizer=optimizers.Adam(1e-3),
+        loss=loss_fn,
+        metrics=[&quot;accuracy&quot;],
+    )
+
+    ckpt_head = f&quot;/kaggle/working/{model_prefix}_head_best.keras&quot;
+    es = callbacks.EarlyStopping(
+        monitor=&quot;val_loss&quot;, patience=8, restore_best_weights=True, verbose=1
+    )
+    rl = callbacks.ReduceLROnPlateau(
+        monitor=&quot;val_loss&quot;, factor=0.3, patience=3, verbose=1
+    )
+    mc = callbacks.ModelCheckpoint(
+        ckpt_head, monitor=&quot;val_loss&quot;, save_best_only=True, verbose=1
+    )
+
+    print(f&quot;\n=== HEAD TRAINING for {model_prefix} ===&quot;)
+    hist_head = model.fit(
+        X_tr,
+        y_tr,
+        validation_data=(X_val, y_val),
+        epochs=epochs_head,
+        batch_size=BATCH,
+        class_weight=class_weight,
+        callbacks=[es, rl, mc],
+        verbose=2,
+    )
+
+ 
+    print(f&quot;\nUnfreezing backbone for {model_prefix} ...&quot;)
+    base.trainable = True
+    for layer in base.layers:
+        if isinstance(layer, layers.BatchNormalization):
+            layer.trainable = False
+
+    model.compile(
+        optimizer=optimizers.Adam(2e-5),
+        loss=loss_fn,
+        metrics=[&quot;accuracy&quot;],
+    )
+
+    ckpt_fine = f&quot;/kaggle/working/{model_prefix}_finetune_best.keras&quot;
+    es2 = callbacks.EarlyStopping(
+        monitor=&quot;val_loss&quot;, patience=8, restore_best_weights=True, verbose=1
+    )
+    rl2 = callbacks.ReduceLROnPlateau(
+        monitor=&quot;val_loss&quot;, factor=0.3, patience=3, verbose=1
+    )
+    mc2 = callbacks.ModelCheckpoint(
+        ckpt_fine, monitor=&quot;val_loss&quot;, save_best_only=True, verbose=1
+    )
+
+    print(f&quot;\n=== FINE-TUNING for {model_prefix} ===&quot;)
+    hist_fine = model.fit(
+        X_tr,
+        y_tr,
+        validation_data=(X_val, y_val),
+        epochs=epochs_fine,
+        batch_size=BATCH,
+        class_weight=class_weight,
+        callbacks=[es2, rl2, mc2],
+        verbose=2,
+    )
+
+    if os.path.exists(ckpt_fine):
+        model = models.load_model(ckpt_fine)
+    elif os.path.exists(ckpt_head):
+        model = models.load_model(ckpt_head)
+
+    return model, hist_head, hist_fine
+
+def eval_wave_with_threshold_and_tta(
+    model, X_val, y_val, X_tests, y_tests, names
+):
+   
+    val_probs = tta_probs(model, X_val)
+    thresholds = np.linspace(0.1, 0.8, 71)
+    best_thr = 0.5
+    best_acc = 0.0
+    for thr in thresholds:
+        preds = (val_probs &gt; thr).astype(int)
+        acc = accuracy_score(y_val, preds)
+        if acc &gt; best_acc:
+            best_acc = acc
+            best_thr = thr
+    print(f&quot;\n[Wave] Best val-threshold = {best_thr:.3f} with val accuracy = {best_acc*100:.2f}%&quot;)
+
+    for X_test, y_test, name in zip(X_tests, y_tests, names):
+        if len(y_test) == 0:
+            print(f&quot;{name}: NO DATA&quot;)
+            continue
+        probs = tta_probs(model, X_test)
+        preds = (probs &gt; best_thr).astype(int)
+        acc = accuracy_score(y_test, preds)
+        print(f&quot;\n{name} (thr={best_thr:.3f} + TTA) accuracy: {acc*100:.2f}%   (N={len(y_test)})&quot;)
+        print(classification_report(y_test, preds, target_names=[&quot;Healthy&quot;,&quot;Parkinson&quot;]))
+        cm = confusion_matrix(y_test, preds)
+        plt.figure(figsize=(4,3))
+        sns.heatmap(
+            cm, annot=True, fmt=&quot;d&quot;, cmap=&quot;Blues&quot;,
+            xticklabels=[&quot;H&quot;,&quot;P&quot;], yticklabels=[&quot;H&quot;,&quot;P&quot;]
+        )
+        plt.title(f&quot;{name} Confusion Matrix&quot;)
+        plt.xlabel(&quot;Predicted&quot;)
+        plt.ylabel(&quot;True&quot;)
+        plt.tight_layout()
+        plt.show()
+
+        try:
+            fpr, tpr, _ = roc_curve(y_test, probs)
+            auc = roc_auc_score(y_test, probs)
+            plt.figure(figsize=(4,3))
+            plt.plot(fpr, tpr, label=f&quot;AUC={auc:.3f}&quot;)
+            plt.plot([0,1],[0,1],&#x27;k--&#x27;)
+            plt.title(f&quot;{name} ROC&quot;)
+            plt.xlabel(&quot;FPR&quot;)
+            plt.ylabel(&quot;TPR&quot;)
+            plt.legend()
+            plt.tight_layout()
+            plt.show()
+        except Exception as e:
+            print(f&quot;{name} ROC error:&quot;, e)
+
+
+print(&quot;\n=== LOADING WAVE DATA ===&quot;)
+
+
+wa_tr_h, wa_tr_hy = load_folder_rgb(
+    os.path.join(HAND_BASE, &quot;wave&quot;, &quot;training&quot;, &quot;healthy&quot;), 0
+)
+wa_tr_p, wa_tr_py = load_folder_rgb(
+    os.path.join(HAND_BASE, &quot;wave&quot;, &quot;training&quot;, &quot;parkinson&quot;), 1
+)
+wa_te_h, wa_te_hy = load_folder_rgb(
+    os.path.join(HAND_BASE, &quot;wave&quot;, &quot;testing&quot;, &quot;healthy&quot;), 0
+)
+wa_te_p, wa_te_py = load_folder_rgb(
+    os.path.join(HAND_BASE, &quot;wave&quot;, &quot;testing&quot;, &quot;parkinson&quot;), 1
+)
+
+hw_wave_train_X = wa_tr_h + wa_tr_p
+hw_wave_train_y = wa_tr_hy + wa_tr_py
+hw_wave_test_X  = wa_te_h + wa_te_p
+hw_wave_test_y  = wa_te_hy + wa_te_py
+
+print(&quot;Handwriting wave train:&quot;, len(hw_wave_train_y),
+      &quot;test:&quot;, len(hw_wave_test_y))
+
+
+arch3_wave_train_X, arch3_wave_train_y = [], []
+arch3_wave_test_X,  arch3_wave_test_y  = [], []
+
+if ARCH3_ROOT is not None:
+
+    a3_wa_tr_h, a3_wa_tr_hy = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;wave&quot;, &quot;training&quot;, &quot;healthy&quot;), 0
+    )
+    a3_wa_tr_p, a3_wa_tr_py = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;wave&quot;, &quot;training&quot;, &quot;parkinson&quot;), 1
+    )
+    a3_wa_dr_tr_h, a3_wa_dr_tr_hy = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;drawings&quot;, &quot;wave&quot;, &quot;training&quot;, &quot;healthy&quot;), 0
+    )
+    a3_wa_dr_tr_p, a3_wa_dr_tr_py = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;drawings&quot;, &quot;wave&quot;, &quot;training&quot;, &quot;parkinson&quot;), 1
+    )
+
+    arch3_wave_train_X = a3_wa_tr_h + a3_wa_tr_p + a3_wa_dr_tr_h + a3_wa_dr_tr_p
+    arch3_wave_train_y = a3_wa_tr_hy + a3_wa_tr_py + a3_wa_dr_tr_hy + a3_wa_dr_tr_py
+
+   
+    a3_wa_te_h, a3_wa_te_hy = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;wave&quot;, &quot;testing&quot;, &quot;healthy&quot;), 0
+    )
+    a3_wa_te_p, a3_wa_te_py = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;wave&quot;, &quot;testing&quot;, &quot;parkinson&quot;), 1
+    )
+    a3_wa_dr_te_h, a3_wa_dr_te_hy = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;drawings&quot;, &quot;wave&quot;, &quot;testing&quot;, &quot;healthy&quot;), 0
+    )
+    a3_wa_dr_te_p, a3_wa_dr_te_py = load_folder_rgb(
+        os.path.join(ARCH3_ROOT, &quot;drawings&quot;, &quot;wave&quot;, &quot;testing&quot;, &quot;parkinson&quot;), 1
+    )
+
+    arch3_wave_test_X = a3_wa_te_h + a3_wa_te_p + a3_wa_dr_te_h + a3_wa_dr_te_p
+    arch3_wave_test_y = a3_wa_te_hy + a3_wa_te_py + a3_wa_dr_te_hy + a3_wa_dr_te_py
+
+print(&quot;Archive3 wave train:&quot;, len(arch3_wave_train_y),
+      &quot;test:&quot;, len(arch3_wave_test_y))
+if len(arch3_wave_train_y) == 0:
+    print(&quot;WARNING: Archive-3 wave empty; using handwriting only for training.&quot;)
+
+hw_factor = 3 
+wave_train_X = hw_wave_train_X * hw_factor + arch3_wave_train_X
+wave_train_y = hw_wave_train_y * hw_factor + arch3_wave_train_y
+
+print(&quot;Wave TOTAL train:&quot;, len(wave_train_y))
+summarize_labels(wave_train_y, &quot;Wave train (oversampled HW)&quot;)
+
+
+X_train_wa, X_val_wa, y_train_wa, y_val_wa = train_test_split(
+    np.array(wave_train_X, dtype=&quot;float32&quot;),
+    np.array(wave_train_y, dtype=&quot;int32&quot;),
+    test_size=0.10,
+    stratify=wave_train_y,
+    random_state=SEED,
+)
+
+print(&quot;Wave train:&quot;, len(y_train_wa), &quot;val:&quot;, len(y_val_wa))
+
+cnt_wa = Counter(y_train_wa)
+cw_wave = {
+    cls: (sum(cnt_wa.values()) / (len(cnt_wa) * count))
+    for cls, count in cnt_wa.items()
+}
+print(&quot;Wave class_weight:&quot;, cw_wave)
+
+
+X_test_hw_wa = np.array(hw_wave_test_X, dtype=&quot;float32&quot;)
+y_test_hw_wa = np.array(hw_wave_test_y, dtype=&quot;int32&quot;)
+
+if len(arch3_wave_test_X) &gt; 0:
+    X_test_a3_wa = np.array(arch3_wave_test_X, dtype=&quot;float32&quot;)
+    y_test_a3_wa = np.array(arch3_wave_test_y, dtype=&quot;int32&quot;)
+else:
+    X_test_a3_wa = np.zeros((0, IMG_SIZE, IMG_SIZE, 3), dtype=&quot;float32&quot;)
+    y_test_a3_wa = np.zeros((0,), dtype=&quot;int32&quot;)
+
+X_test_wa_all = np.concatenate([X_test_hw_wa, X_test_a3_wa], axis=0)
+y_test_wa_all = np.concatenate([y_test_hw_wa, y_test_a3_wa], axis=0)
+
+print(&quot;Wave combined test:&quot;, len(y_test_wa_all))
+
+
+print(&quot;\n=== BUILDING WAVE MODEL (EffNetV2B0) ===&quot;)
+wave_model, wave_base = build_effnet_b0_wave(name=&quot;WaveModel&quot;)
+wave_model.summary()
+
+wave_model, wa_hist_head, wa_hist_fine = train_head_and_finetune(
+    wave_model,
+    wave_base,
+    X_train_wa, y_train_wa,
+    X_val_wa,   y_val_wa,
+    cw_wave,
+    model_prefix=&quot;WaveModel&quot;,
+)
+
+print(&quot;\n=== EVALUATING WAVE MODEL (threshold-tuned + TTA) ===&quot;)
+eval_wave_with_threshold_and_tta(
+    wave_model,
+    X_val_wa, y_val_wa,
+    [X_test_hw_wa, X_test_a3_wa, X_test_wa_all],
+    [y_test_hw_wa, y_test_a3_wa, y_test_wa_all],
+    [&quot;HW Wave Test&quot;, &quot;Archive3 Wave Test&quot;, &quot;Wave Combined Test&quot;],
+)
+
+print(&quot;\n=== WAVE DONE ===&quot;)
+</code></pre>
+      </div>
+
+      <!-- Voice Panel -->
+      <div class="code-panel" id="panel-voice">
+        <div class="code-meta">
+          <div class="code-meta-title">Voice Models (AHH · Vowels · Text · 4-Class)</div>
+          <span class="code-meta-badge badge-sklearn">scikit-learn / librosa</span>
+          <span class="code-meta-badge badge-acc">AHH AUC 0.967</span>
+          <button class="copy-btn" onclick="copyCode('voice-code')">Copy</button>
+        </div>
+        <div class="code-desc">
+          All four voice models share a common feature extraction pipeline: 36 acoustic features per file
+          (13 MFCC means + 13 MFCC stds + ZCR mean/std + spectral centroid mean/std + bandwidth mean/std +
+          rolloff mean/std + RMS mean/std). ReadText files skip the first 30 seconds to skip the narrator reading
+          the passage. Models: StandardScaler + RBF SVC pipeline with GridSearchCV.
+          Binary models (AHH, Vowels, Text) output HC/PD. The 4-class model outputs HC/PD/PSP/MSA using
+          one-vs-rest with class_weight=&quot;balanced&quot;.
+        </div>
+        <pre><code class="language-python" id="voice-code"># ===========================================
+# CELL 2 — Feature extraction + model helpers
+#           (skips files shorter than 1 second)
+# ===========================================
+
+import numpy as np
+import pandas as pd
+import librosa
+from pathlib import Path
+from tqdm import tqdm
+
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+)
+
+import joblib
+
+
+def extract_features_for_file(path_str: str):
+    &quot;&quot;&quot;
+    Load an audio file and extract a fixed-length feature vector.
+    - Skips files shorter than 1 second
+    - For text (&#x27;ReadText&#x27; in path), skips the first 30 seconds.
+    Returns:
+        list of 36 floats, or None if something goes wrong / too short.
+    &quot;&quot;&quot;
+    path_str = str(path_str)
+
+    # 1) Load audio
+    try:
+        y, sr = librosa.load(path_str, sr=None, mono=True)
+    except Exception as e:
+        print(f&quot;[SKIP] {path_str}: {e}&quot;)
+        return None
+
+    # 2) Skip very short files globally (&lt;1s)
+    dur = len(y) / float(sr)
+    if dur &lt; 1.0:
+        print(f&quot;[SKIP &lt;1s] {path_str}: duration={dur:.3f}s&quot;)
+        return None
+
+    # 3) For text recordings, skip first 30 seconds
+    norm_path = path_str.replace(&quot;\\&quot;, &quot;/&quot;)
+    if &quot;ReadText&quot; in norm_path:
+        offset_samples = min(len(y), int(33.0 * sr))
+        y = y[offset_samples:]
+
+        # Re-check duration after skipping 30s
+        dur_after = len(y) / float(sr)
+        if dur_after &lt; 1.0:
+            print(f&quot;[SKIP text &lt;1s after 30s offset] {path_str}: duration={dur_after:.3f}s&quot;)
+            return None
+    else:
+        dur_after = len(y) / float(sr)
+
+    # 4) Feature extraction
+    feats = []
+
+    # Duration (seconds) after processing
+    feats.append(dur_after)
+
+    # RMS energy
+    try:
+        rms = librosa.feature.rms(y=y)[0]
+        feats.extend([rms.mean(), rms.std()])
+    except Exception:
+        feats.extend([0.0, 0.0])
+
+    # Zero-crossing rate
+    try:
+        zcr = librosa.feature.zero_crossing_rate(y)[0]
+        feats.extend([zcr.mean(), zcr.std()])
+    except Exception:
+        feats.extend([0.0, 0.0])
+
+    # Pitch (f0) via librosa.yin
+    try:
+        f0 = librosa.yin(y, fmin=50, fmax=500, sr=sr)
+        feats.extend([np.nanmean(f0), np.nanstd(f0)])
+    except Exception:
+        feats.extend([0.0, 0.0])
+
+    # MFCCs (13 coefficients → mean + std = 26 features)
+    try:
+        mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+        mfcc_mean = mfcc.mean(axis=1)
+        mfcc_std = mfcc.std(axis=1)
+        feats.extend(mfcc_mean.tolist())
+        feats.extend(mfcc_std.tolist())
+    except Exception:
+        # If MFCC fails, pad with zeros
+        feats.extend([0.0] * 26)
+
+    # 5) Ensure fixed length of 36 numeric features
+    if len(feats) &lt; 36:
+        feats = feats + [0.0] * (36 - len(feats))
+    else:
+        feats = feats[:36]
+
+    return feats
+
+
+def build_dataframe_from_files(file_paths, labels):
+    &quot;&quot;&quot;
+    Given a list of paths and labels, extract features for each file
+    and build a DataFrame with:
+      - &#x27;path&#x27;
+      - &#x27;label&#x27;
+      - f0 ... f35
+    Files where feature extraction fails / is skipped are omitted.
+    &quot;&quot;&quot;
+    rows = []
+    iterable = list(zip(file_paths, labels))
+    for p, lab in tqdm(iterable, desc=&quot;Extracting features&quot;, total=len(iterable)):
+        feats = extract_features_for_file(str(p))
+        if feats is None:
+            continue
+
+        row = {&quot;path&quot;: str(p), &quot;label&quot;: lab}
+        for i, v in enumerate(feats):
+            row[f&quot;f{i}&quot;] = v
+        rows.append(row)
+
+    df = pd.DataFrame(rows)
+    print(&quot;Feature table shape:&quot;, df.shape)
+    print(df[&quot;label&quot;].value_counts())
+    return df
+
+
+def evaluate_binary_model(
+    df,
+    model_name=&quot;binary_model&quot;,
+    positive_label=&quot;PD&quot;,
+    test_size=0.2,
+    random_state=42,
+):
+    &quot;&quot;&quot;
+    Train a binary SVM with:
+      - StandardScaler
+      - RBF SVC(probability=True)
+      - GridSearchCV over C and gamma
+    Interprets `positive_label` as 1, everything else as 0.
+    Saves the best model to /kaggle/working/{model_name}.joblib
+    &quot;&quot;&quot;
+    feature_cols = [c for c in df.columns if c.startswith(&quot;f&quot;)]
+    print(f&quot;[{model_name}] Using {len(feature_cols)} feature columns&quot;)
+
+    X = df[feature_cols].values
+    y_labels = (df[&quot;label&quot;].values == positive_label).astype(int)
+
+    print(f&quot;Label counts (0 != {positive_label}, 1 == {positive_label}):&quot;)
+    print(np.bincount(y_labels))
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y_labels,
+        test_size=test_size,
+        random_state=random_state,
+        stratify=y_labels,
+    )
+
+    print(&quot;Train size:&quot;, X_train.shape[0], &quot;, Test size:&quot;, X_test.shape[0])
+
+    pipe = Pipeline([
+        (&quot;sc&quot;, StandardScaler()),
+        (&quot;clf&quot;, SVC(kernel=&quot;rbf&quot;, probability=True, random_state=random_state)),
+    ])
+
+    param_grid = {
+        &quot;clf__C&quot;: [0.1, 1, 10],
+        &quot;clf__gamma&quot;: [&quot;scale&quot;, 0.1, 0.01],
+    }
+
+    print(f&quot;Running GridSearch for {model_name}...&quot;)
+    gs = GridSearchCV(
+        pipe,
+        param_grid=param_grid,
+        cv=5,
+        scoring=&quot;accuracy&quot;,
+        n_jobs=-1,
+        verbose=1,
+    )
+    gs.fit(X_train, y_train)
+
+    print(&quot;Best params:&quot;, gs.best_params_)
+    print(&quot;Best CV accuracy:&quot;, gs.best_score_)
+
+    best_clf = gs.best_estimator_
+    y_pred = best_clf.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+    print(f&quot;\n{model_name} — holdout accuracy: {acc:.3f}\n&quot;)
+    print(&quot;Classification report:&quot;)
+    print(classification_report(y_test, y_pred))
+    print(&quot;Confusion matrix [rows=true, cols=pred]:&quot;)
+    print(confusion_matrix(y_test, y_pred))
+
+    out_path = f&quot;/kaggle/working/{model_name}.joblib&quot;
+    joblib.dump(best_clf, out_path)
+    print(f&quot;Saved model to: {out_path}&quot;)
+
+    return best_clf, acc
+
+
+def evaluate_multiclass_model(
+    df,
+    model_name=&quot;multiclass_model&quot;,
+    test_size=0.2,
+    random_state=42,
+):
+    &quot;&quot;&quot;
+    Train a multi-class SVM with:
+      - StandardScaler
+      - RBF SVC(probability=True, decision_function_shape=&#x27;ovr&#x27;)
+      - GridSearchCV over C and gamma
+    Assumes df[&#x27;label&#x27;] are class strings, df[f0..fN] are features.
+    &quot;&quot;&quot;
+    feature_cols = [c for c in df.columns if c.startswith(&quot;f&quot;)]
+    print(f&quot;[{model_name}] Using {len(feature_cols)} feature columns&quot;)
+
+    X = df[feature_cols].values
+    y_labels = df[&quot;label&quot;].values
+
+    classes = sorted(np.unique(y_labels))
+    class_to_int = {cls: i for i, cls in enumerate(classes)}
+    y = np.array([class_to_int[c] for c in y_labels])
+
+    print(&quot;Label counts:&quot;)
+    print(df[&quot;label&quot;].value_counts())
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=test_size,
+        random_state=random_state,
+        stratify=y,
+    )
+
+    print(&quot;Train size:&quot;, X_train.shape[0], &quot;, Test size:&quot;, X_test.shape[0])
+
+    pipe = Pipeline([
+        (&quot;sc&quot;, StandardScaler()),
+        (&quot;clf&quot;, SVC(
+            kernel=&quot;rbf&quot;,
+            probability=True,
+            decision_function_shape=&quot;ovr&quot;,
+            random_state=random_state,
+        )),
+    ])
+
+    # Wider grid for the 4-class vowels model
+    param_grid = {
+        &quot;clf__C&quot;: [0.1, 1, 10, 30],
+        &quot;clf__gamma&quot;: [&quot;scale&quot;, 0.1, 0.03, 0.01],
+    }
+
+    print(f&quot;Running GridSearch for {model_name}...&quot;)
+    gs = GridSearchCV(
+        pipe,
+        param_grid=param_grid,
+        cv=5,
+        scoring=&quot;accuracy&quot;,
+        n_jobs=-1,
+        verbose=1,
+    )
+    gs.fit(X_train, y_train)
+
+    print(&quot;Best params:&quot;, gs.best_params_)
+    print(&quot;Best CV accuracy:&quot;, gs.best_score_)
+
+    best_clf = gs.best_estimator_
+    y_pred = best_clf.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+    print(f&quot;\n{model_name} — holdout accuracy: {acc:.3f}\n&quot;)
+    print(&quot;Classification report:&quot;)
+    print(classification_report(y_test, y_pred, target_names=classes))
+    print(&quot;Confusion matrix [rows=true, cols=pred]:&quot;)
+    print(confusion_matrix(y_test, y_pred))
+
+    out_path = f&quot;/kaggle/working/{model_name}.joblib&quot;
+    joblib.dump(best_clf, out_path)
+    print(f&quot;Saved model to: {out_path}&quot;)
+
+    return best_clf, acc
+
+
+# ===========================================
+# MODEL 1 — PD vs HC, AHH only
+# ===========================================
+
+# ===========================================
+# CELL 2: Model 1 — PD vs HC, AHH only
+# ===========================================
+
+from pathlib import Path
+
+ahh_roots = [
+    (&quot;/kaggle/input/927-found-datasets/HC_AH/HC_AH&quot;, &quot;HC&quot;),
+    (&quot;/kaggle/input/927-found-datasets/PD_AH/PD_AH&quot;, &quot;PD&quot;),
+    (&quot;/kaggle/input/voice-samples-for-patients-with-parkinsons-and-hc/HC_AH/HC_AH&quot;, &quot;HC&quot;),
+    (&quot;/kaggle/input/voice-samples-for-patients-with-parkinsons-and-hc/PD_AH/PD_AH&quot;, &quot;PD&quot;),
+]
+
+ahh_files = []
+ahh_labels = []
+
+print(&quot;Scanning AHH roots...&quot;)
+for root, lab in ahh_roots:
+    root_path = Path(root)
+    wavs = sorted(root_path.glob(&quot;*.wav&quot;))
+    print(f&quot;  {root} — {lab}: {len(wavs)} files&quot;)
+    ahh_files.extend(wavs)
+    ahh_labels.extend([lab] * len(wavs))
+
+print(f&quot;\nTotal AHH files: {len(ahh_files)}&quot;)
+
+df_ahh = build_dataframe_from_files(ahh_files, ahh_labels)
+
+# Train PD vs HC on AHH
+model_ahh, acc_ahh = evaluate_binary_model(
+    df_ahh,
+    model_name=&quot;PD_vs_HC_AHH&quot;,
+    positive_label=&quot;PD&quot;
+)
+
+
+# ===========================================
+# MODEL 2 — PD vs HC, Vowels only
+# ===========================================
+
+# ===========================================
+# CELL 3: Model 2 — PD vs HC, vowels only
+# ===========================================
+
+vowels_root = Path(&quot;/kaggle/input/speakers-with-parkinsons-and-parkinsonism/records/records&quot;)
+
+def infer_vowel_label_from_name(path: Path):
+    &quot;&quot;&quot;
+    Infer label from file name for the vowels dataset.
+    Assumes filename contains HC / PD / PSP / MSA somewhere.
+    &quot;&quot;&quot;
+    name = path.name.upper()
+    if &quot;HC&quot; in name:
+        return &quot;HC&quot;
+    if &quot;PSP&quot; in name:
+        return &quot;PSP&quot;
+    if &quot;MSA&quot; in name:
+        return &quot;MSA&quot;
+    if &quot;PD&quot; in name:
+        return &quot;PD&quot;
+    return None
+
+print(&quot;Scanning vowels root...&quot;)
+vowel_files_all = sorted(vowels_root.glob(&quot;*.wav&quot;))
+
+labels_all = []
+files_all = []
+for p in vowel_files_all:
+    lab = infer_vowel_label_from_name(p)
+    if lab is None:
+        continue
+    labels_all.append(lab)
+    files_all.append(p)
+
+df_vowels_all = pd.DataFrame({&quot;path&quot;: [str(p) for p in files_all], &quot;label&quot;: labels_all})
+print(&quot;Raw label counts from vowels:&quot;)
+print(df_vowels_all[&quot;label&quot;].value_counts())
+
+# Filter to PD / HC only for this model
+mask_binary = df_vowels_all[&quot;label&quot;].isin([&quot;PD&quot;, &quot;HC&quot;])
+df_vowels_bin = df_vowels_all[mask_binary].reset_index(drop=True)
+print(&quot;\nFiltered PD/HC label counts:&quot;)
+print(df_vowels_bin[&quot;label&quot;].value_counts())
+
+# Extract features
+v_files = [Path(p) for p in df_vowels_bin[&quot;path&quot;].tolist()]
+v_labs  = df_vowels_bin[&quot;label&quot;].tolist()
+
+df_vowels_feat = build_dataframe_from_files(v_files, v_labs)
+
+# Train PD vs HC on vowels
+model_vowels, acc_vowels = evaluate_binary_model(
+    df_vowels_feat,
+    model_name=&quot;PD_vs_HC_vowels&quot;,
+    positive_label=&quot;PD&quot;
+)
+
+
+# ===========================================
+# MODEL 3 — PD vs HC, Text Reading
+# ===========================================
+
+# ===========================================
+# CELL 4 — Model D:
+# PD vs HC, ReadText + SpontaneousDialogue
+# (34s skip handled inside extract_features_for_file)
+# Class-weighted SVM + threshold sweep
+# ===========================================
+
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    precision_recall_fscore_support
+)
+import joblib
+
+# ----------------------------------------------------
+# 1. Collect files from ReadText + SpontaneousDialogue
+# ----------------------------------------------------
+text_spont_roots = [
+    # Read text
+    (&quot;/kaggle/input/927-found-datasets/2867216/26_29_09_2017_KCL/26-29_09_2017_KCL/ReadText/HC&quot;, &quot;HC&quot;),
+    (&quot;/kaggle/input/927-found-datasets/2867216/26_29_09_2017_KCL/26-29_09_2017_KCL/ReadText/PD&quot;, &quot;PD&quot;),
+    # Spontaneous dialogue
+    (&quot;/kaggle/input/927-found-datasets/2867216/26_29_09_2017_KCL/26-29_09_2017_KCL/SpontaneousDialogue/HC&quot;, &quot;HC&quot;),
+    (&quot;/kaggle/input/927-found-datasets/2867216/26_29_09_2017_KCL/26-29_09_2017_KCL/SpontaneousDialogue/PD&quot;, &quot;PD&quot;),
+]
+
+text_files = []
+text_labels = []
+
+print(&quot;Scanning ReadText + SpontaneousDialogue roots...&quot;)
+for root, lab in text_spont_roots:
+    root_path = Path(root)
+    wavs = sorted(root_path.glob(&quot;*.wav&quot;))
+    print(f&quot;  {root} — {lab}: {len(wavs)} files&quot;)
+    text_files.extend(wavs)
+    text_labels.extend([lab] * len(wavs))
+
+print(f&quot;\nTotal TEXT/SPONT files before feature extraction: {len(text_files)}&quot;)
+
+if len(text_files) == 0:
+    print(&quot;No TEXT/SPONT .wav files found. Skipping PD_vs_HC_text_spont34 model training.&quot;)
+else:
+    # ----------------------------------------------------
+    # 2. Build feature table (uses your existing utilities)
+    #    Assumes extract_features_for_file already skips
+    #    ~34s for these long recordings.
+    # ----------------------------------------------------
+    df_text = build_dataframe_from_files(text_files, text_labels)
+
+    print(&quot;\nTEXT+SPONT feature table shape:&quot;, df_text.shape)
+    print(df_text[&quot;label&quot;].value_counts())
+
+    # ----------------------------------------------------
+    # 3. Prepare X, y for PD vs HC (binary, PD = 1)
+    # ----------------------------------------------------
+    feature_cols = [c for c in df_text.columns if c.startswith(&quot;f&quot;)]
+    print(f&quot;\n[PD_vs_HC_text_spont34] Using {len(feature_cols)} feature columns&quot;)
+
+    X = df_text[feature_cols].values
+    # 0 = HC, 1 = PD
+    y = (df_text[&quot;label&quot;].values == &quot;PD&quot;).astype(int)
+
+    unique, counts = np.unique(y, return_counts=True)
+    label_counts = dict(zip(unique, counts))
+    print(f&quot;Label counts (0=HC, 1=PD): {label_counts}\n&quot;)
+
+    # ----------------------------------------------------
+    # 4. Train/test split (file-level, stratified)
+    # ----------------------------------------------------
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y
+    )
+
+    print(f&quot;Train size: {X_train.shape[0]} , Test size: {X_test.shape[0]}\n&quot;)
+
+    # ----------------------------------------------------
+    # 5. Class-weighted SVM + GridSearchCV on training set
+    # ----------------------------------------------------
+    pipe = Pipeline([
+        (&quot;sc&quot;, StandardScaler()),
+        (&quot;clf&quot;, SVC(
+            kernel=&quot;rbf&quot;,
+            probability=True,
+            class_weight={0: 1.0, 1: 2.0},  # PD is weighted higher
+            random_state=42
+        )),
+    ])
+
+    param_grid = {
+        &quot;clf__C&quot;:    [0.3, 1, 3, 10, 30],
+        &quot;clf__gamma&quot;: [0.001, 0.003, 0.01, 0.03, 0.1],
+    }
+
+    print(&quot;Running GridSearchCV for PD_vs_HC_text_spont34 (5-fold CV)...&quot;)
+    grid = GridSearchCV(
+        pipe,
+        param_grid,
+        cv=5,
+        scoring=&quot;accuracy&quot;,
+        n_jobs=-1,
+        verbose=1
+    )
+
+    grid.fit(X_train, y_train)
+
+    print(&quot;\nBest CV params:&quot;, grid.best_params_)
+    print(&quot;Best CV accuracy:&quot;, grid.best_score_)
+
+    best_clf = grid.best_estimator_
+
+    # ----------------------------------------------------
+    # 6. Evaluate at default threshold 0.5
+    # ----------------------------------------------------
+    probs_test = best_clf.predict_proba(X_test)[:, 1]  # P(PD)
+    y_pred_default = (probs_test &gt;= 0.5).astype(int)
+
+    acc_default = accuracy_score(y_test, y_pred_default)
+    print(f&quot;\nPD_vs_HC_text_spont34 — holdout accuracy (thr=0.50): {acc_default:.3f}\n&quot;)
+
+    print(&quot;Classification report (thr=0.50):&quot;)
+    print(classification_report(y_test, y_pred_default, target_names=[&quot;HC&quot;, &quot;PD&quot;]))
+
+    print(&quot;Confusion matrix [rows=true, cols=pred] (thr=0.50):&quot;)
+    print(confusion_matrix(y_test, y_pred_default))
+
+    # ----------------------------------------------------
+    # 7. Threshold sweep focused on PD sensitivity
+    # ----------------------------------------------------
+    thresholds = [0.20, 0.30, 0.40, 0.50]
+
+    print(&quot;\n=== Threshold sweep (focusing on PD recall) ===&quot;)
+    for thr in thresholds:
+        y_pred_thr = (probs_test &gt;= thr).astype(int)
+        acc = accuracy_score(y_test, y_pred_thr)
+        prec, rec, f1, _ = precision_recall_fscore_support(
+            y_test, y_pred_thr, labels=[1], average=None, zero_division=0
+        )
+        pd_prec = prec[0]
+        pd_rec = rec[0]
+        pd_f1 = f1[0]
+        print(
+            f&quot;thr={thr:0.2f} | &quot;
+            f&quot;ACC={acc:0.3f} | &quot;
+            f&quot;PD precision={pd_prec:0.3f} | &quot;
+            f&quot;PD recall={pd_rec:0.3f} | &quot;
+            f&quot;PD F1={pd_f1:0.3f}&quot;
+        )
+
+    # ----------------------------------------------------
+    # 8. Save model
+    # ----------------------------------------------------
+    out_path = &quot;/kaggle/working/PD_vs_HC_text_spont34.joblib&quot;
+    joblib.dump(best_clf, out_path)
+    print(f&quot;\nSaved class-weighted PD_vs_HC_text_spont34 model to: {out_path}&quot;)
+
+
+# ===========================================
+# MODEL 4 — 4-class: HC / PD / PSP / MSA
+# ===========================================
+
+# ===============================================
+# CELL 2b (UPDATED) — Multiclass model evaluator
+#  (HC / PD / PSP / MSA, stronger SVM tuning)
+# ===============================================
+
+from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+import numpy as np
+import joblib
+
+def evaluate_multiclass_model(
+    df,
+    model_name=&quot;multiclass_model&quot;,
+    test_size=0.2,
+    random_state=42,
+    save_path=&quot;/kaggle/working&quot;
+):
+    &quot;&quot;&quot;
+    Train a 4-class SVM model using:
+      - StandardScaler
+      - RBF SVC(probability=True, decision_function_shape=&#x27;ovr&#x27;)
+      - StratifiedKFold CV
+      - Larger search space over C and gamma
+      - class_weight=&#x27;balanced&#x27; for skew handling
+
+    Assumes df has:
+      - &#x27;label&#x27;: class strings (e.g., &#x27;HC&#x27;, &#x27;PD&#x27;, &#x27;PSP&#x27;, &#x27;MSA&#x27;)
+      - feature columns starting with &quot;f&quot;
+    &quot;&quot;&quot;
+
+    # -------------------------
+    # 1) Features / labels
+    # -------------------------
+    feature_cols = [c for c in df.columns if c.startswith(&quot;f&quot;)]
+    print(f&quot;[{model_name}] Using {len(feature_cols)} feature columns&quot;)
+
+    X = df[feature_cols].values
+    y_labels = df[&quot;label&quot;].values
+
+    # Encode labels as integers for the classifier
+    classes = sorted(np.unique(y_labels))
+    class_to_int = {cls: i for i, cls in enumerate(classes)}
+    int_to_class = {v: k for k, v in class_to_int.items()}
+    y = np.array([class_to_int[c] for c in y_labels])
+
+    print(&quot;Label counts:&quot;)
+    print(df[&quot;label&quot;].value_counts())
+
+    
+
+    # -------------------------
+    # 2) Train / test split
+    # -------------------------
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=test_size,
+        random_state=random_state,
+        stratify=y,
+    )
+
+    print(&quot;Train size:&quot;, X_train.shape[0], &quot;, Test size:&quot;, X_test.shape[0])
+
+    # -------------------------
+    # 3) Pipeline + param grid
+    # -------------------------
+    pipe = Pipeline([
+        (&quot;sc&quot;, StandardScaler()),
+        (
+            &quot;clf&quot;,
+            SVC(
+                kernel=&quot;rbf&quot;,
+                probability=True,
+                decision_function_shape=&quot;ovr&quot;,
+                class_weight=&quot;balanced&quot;,   # &lt;-- helps with slight imbalances
+                random_state=random_state,
+            )
+        ),
+    ])
+
+    # Wider search over C and gamma (log-scale-ish)
+    param_grid = {
+        &quot;clf__C&quot;:    [0.3, 1, 3, 10, 30],
+        &quot;clf__gamma&quot;: [&quot;scale&quot;, 1, 0.3, 0.1, 0.03, 0.01],
+    }
+
+    cv = StratifiedKFold(
+        n_splits=5,
+        shuffle=True,
+        random_state=random_state,
+    )
+
+    grid = GridSearchCV(
+        pipe,
+        param_grid=param_grid,
+        scoring=&quot;accuracy&quot;,
+        cv=cv,
+        n_jobs=-1,
+        verbose=1,
+    )
+
+    print(f&quot;Running GridSearch for {model_name}...&quot;)
+    grid.fit(X_train, y_train)
+
+    print(&quot;Best params:&quot;, grid.best_params_)
+    print(&quot;Best CV accuracy:&quot;, grid.best_score_)
+
+    best_clf = grid.best_estimator_
+
+    # -------------------------
+    # 4) Evaluation
+    # -------------------------
+    y_pred = best_clf.predict(X_test)
+    acc = accuracy_score(y_test, y_pred)
+    print(f&quot;\n{model_name} — holdout accuracy: {acc:.3f}\n&quot;)
+
+    print(&quot;Classification report:&quot;)
+    print(
+        classification_report(
+            y_test,
+            y_pred,
+            target_names=[int_to_class[i] for i in sorted(int_to_class.keys())],
+        )
+    )
+
+    cm = confusion_matrix(y_test, y_pred)
+    print(&quot;Confusion matrix [rows=true, cols=pred]:&quot;)
+    print(cm)
+
+    # -------------------------
+    # 5) Save model
+    # -------------------------
+    out_path = f&quot;{save_path}/{model_name}.joblib&quot;
+    joblib.dump((best_clf, class_to_int, int_to_class), out_path)
+    print(f&quot;Saved model to: {out_path}&quot;)
+
+    return best_clf, acc</code></pre>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Medical Disclaimer -->
+  <section style="padding: 0 0 40px;">
+    <div class="nt-container">
+      <div class="nt-disclaimer-box">
+        <span class="nt-disclaimer-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </span>
+        <p><strong>Medical Disclaimer:</strong> NeuroTrace is a research tool for AI Presidential Challenge 2026. It is <strong>not</strong> a certified medical device and has not been approved by the FDA. Always consult a qualified healthcare provider.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="nt-footer">
+    <p>NEUROTRACE v1.0 &nbsp;&middot;&nbsp; AI Presidential Challenge 2026</p>
+    <p style="margin-top:6px;">Conceptualized and developed in the United States &#127482;&#127480;</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+
+    function showTab(name, btn) {
+      document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.code-tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('panel-' + name).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function copyCode(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      navigator.clipboard.writeText(el.innerText).then(() => {
+        const btn = event.target;
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.color = 'var(--green)';
+        btn.style.borderColor = 'var(--green)';
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.color = '';
+          btn.style.borderColor = '';
+        }, 1500);
+      });
+    }
+  </script>
+
+</body>
+</html>
