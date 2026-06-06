@@ -119,7 +119,11 @@
           <input type="file" accept="audio/*,.wav,.mp3,.m4a" onchange="handleVoiceUpload(this, 'text')" />
           <div class="upload-icon">&#128214;</div>
           <div class="upload-title">Text Reading</div>
-          <div class="upload-desc">Read a short paragraph aloud. Natural, conversational pace.</div>
+          <div class="upload-desc">Read the passage below aloud at a natural, conversational pace. Record yourself, then upload the audio.</div>
+          <div style="margin:12px 0;padding:12px 14px;background:var(--bg-hover);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text-secondary);line-height:1.7;text-align:left;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">Read this aloud:</div>
+            "The North Wind and the Sun were disputing which was the stronger, when a traveler came along wrapped in a warm cloak. They agreed that the one who first succeeded in making the traveler take his cloak off should be considered stronger. Then the North Wind blew as hard as he could, but the more he blew, the more closely did the traveler fold his cloak around him. At last the Wind gave up the attempt. Then the Sun shined out warmly, and immediately the traveler took off his cloak."
+          </div>
           <button class="upload-btn">Choose File</button>
           <div class="upload-status" id="status-text"></div>
           <div id="result-text"></div>
