@@ -180,37 +180,37 @@
         <div class="nt-cards-3">
 
           <div class="nt-tech-card">
-            <div class="nt-tech-chip">94.59% Accuracy</div>
+            <div class="nt-tech-chip">94.6% Accuracy</div>
             <h3>Meander Model</h3>
             <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);">
               <strong>Architecture:</strong> EfficientNetV2B0 (ImageNet, frozen) &rarr; Input(name=&ldquo;img&rdquo;) &rarr; preprocess_input &rarr; GlobalAveragePooling2D &rarr; Dropout(0.4) &rarr; Dense(256, ReLU, L2=1e-4) &rarr; Dropout(0.4) &rarr; Dense(1, sigmoid).<br><br>
               <strong>Training:</strong> Phase 1 — head only, Adam(1e-3), 6 epochs, EarlyStopping(patience=4), ReduceLROnPlateau(factor=0.3, patience=2). Phase 2 — backbone unfrozen (BatchNorm kept frozen), Adam(1e-5), 6 epochs.<br><br>
               <strong>Dataset:</strong> HandPD (MeanderControl / MeanderPatients), 80% temp → 85% train / 15% val, 20% test. No augmentation.<br><br>
-              <strong>Results (N=74):</strong> Accuracy 94.59%, F1=0.91, PD F1=0.97. Confusion: [[12,2],[2,58]].
+              <strong>Results (N=74):</strong> Accuracy 94.6%, F1=0.91, PD F1=0.97. Confusion: [[12,2],[2,58]].
             </p>
           </div>
 
           <div class="nt-tech-card">
-            <div class="nt-tech-chip">90.00% Accuracy</div>
+            <div class="nt-tech-chip">90.0% Accuracy</div>
             <h3>Spiral Model</h3>
             <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);">
               <strong>Architecture:</strong> Same backbone + Dropout(0.3) + Dense(256, L2=5e-5). Augmentation pipeline (no flips): RandomRotation(0.12), RandomZoom(0.12), RandomTranslation(0.08, 0.08).<br><br>
               <strong>Training:</strong> 2-model ensemble (seeds 42 &amp; 123). Phase 1 — Adam(1e-3), label_smoothing=0.01, 20 epochs, EarlyStopping(patience=6). Phase 2 — Adam(3e-5), 15 epochs. Threshold tuned via val-set sweep (0.2&ndash;0.8).<br><br>
               <strong>Inference:</strong> 4-pass TTA &mdash; original + h-flip + rot90 CCW + rot90 CW, averaged.<br><br>
               <strong>Dataset:</strong> HandPD spirals + Archive-3, handwriting oversampled 3&times;; 80/20 split.<br><br>
-              <strong>Results (N=90):</strong> Accuracy 90.00%, F1=0.90. Confusion: [[42,3],[6,39]].
+              <strong>Results (N=90):</strong> Accuracy 90.0%, F1=0.90. Confusion: [[42,3],[6,39]].
             </p>
           </div>
 
           <div class="nt-tech-card">
-            <div class="nt-tech-chip">93.33% Accuracy</div>
+            <div class="nt-tech-chip">93.3% Accuracy</div>
             <h3>Wave Model</h3>
             <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);">
               <strong>Architecture:</strong> Same backbone + Dropout(0.4) + Dense(256, L2=1e-4). Broader augmentation: RandomRotation(0.10), RandomZoom(0.10), RandomTranslation(0.08, 0.08), RandomContrast(0.10), RandomBrightness(0.10).<br><br>
               <strong>Training:</strong> Single model. Phase 1 — Adam(1e-3), label_smoothing=0.01, 20 epochs, EarlyStopping(patience=8). Phase 2 — Adam(2e-5), 15 epochs.<br><br>
               <strong>Inference:</strong> 4-pass TTA identical to Spiral.<br><br>
               <strong>Dataset:</strong> HandPD wave + Archive-3 wave, HW oversampled 3&times;; 90/10 split.<br><br>
-              <strong>Results (N=90):</strong> Accuracy 93.33%. Confusion: [[42,3],[3,42]].
+              <strong>Results (N=90):</strong> Accuracy 93.3%. Confusion: [[42,3],[3,42]].
             </p>
           </div>
 
@@ -220,7 +220,7 @@
         <div class="nt-cards-4">
 
           <div class="nt-tech-card">
-            <div class="nt-tech-chip">AUC 0.967</div>
+            <div class="nt-tech-chip">90.9% Accuracy</div>
             <h3>AHH Model</h3>
             <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);">
               Binary PD vs HC on sustained &ldquo;ahh&rdquo; phonation.<br><br>
@@ -232,7 +232,7 @@
           </div>
 
           <div class="nt-tech-card">
-            <div class="nt-tech-chip">AUC 0.932</div>
+            <div class="nt-tech-chip">79.5% Accuracy</div>
             <h3>Vowels Model</h3>
             <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);">
               Binary PD vs HC on sustained vowel sounds.<br><br>
@@ -244,7 +244,7 @@
           </div>
 
           <div class="nt-tech-card">
-            <div class="nt-tech-chip">AUC 0.852</div>
+            <div class="nt-tech-chip">86.7% Accuracy</div>
             <h3>Text Reading Model</h3>
             <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);">
               Binary PD vs HC on continuous speech (North Wind passage).<br><br>
@@ -255,7 +255,7 @@
           </div>
 
           <div class="nt-tech-card">
-            <div class="nt-tech-chip">4-Class</div>
+            <div class="nt-tech-chip">85.2% Accuracy</div>
             <h3>4-Class Vowel Classifier</h3>
             <p style="font-size:13px;line-height:1.7;color:var(--text-secondary);">
               Classifies into HC / PD / PSP / MSA from a single vowel recording.<br><br>

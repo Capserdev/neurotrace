@@ -171,14 +171,14 @@
         <div class="code-meta">
           <div class="code-meta-title">Meander Model</div>
           <span class="code-meta-badge badge-keras">TensorFlow / Keras</span>
-          <span class="code-meta-badge badge-acc">Accuracy 94.59%</span>
+          <span class="code-meta-badge badge-acc">Accuracy 94.6%</span>
           <button class="copy-btn" onclick="copyCode('meander-code')">Copy</button>
         </div>
         <div class="code-desc">
           EfficientNetV2B0 pretrained on ImageNet, fine-tuned on the HandPD meander dataset.
           Two-phase training: head-only (Adam 1e-3, 6 epochs) then full fine-tune (Adam 1e-5, 6 epochs).
           No augmentation — meander images are structurally invariant to flip/rotation.
-          Final test set: N=74, Accuracy 94.59%, PD F1=0.97.
+          Final test set: N=74, Accuracy 94.6%, PD F1=0.97.
         </div>
         <pre><code class="language-python" id="meander-code">
 import os, random
@@ -456,7 +456,7 @@ print(&quot;\n=== MEANDER DONE ===&quot;)</code></pre>
         <div class="code-meta">
           <div class="code-meta-title">Spiral Model</div>
           <span class="code-meta-badge badge-keras">TensorFlow / Keras</span>
-          <span class="code-meta-badge badge-acc">Accuracy 90.00%</span>
+          <span class="code-meta-badge badge-acc">Accuracy 90.0%</span>
           <button class="copy-btn" onclick="copyCode('spiral-code')">Copy</button>
         </div>
         <div class="code-desc">
@@ -464,7 +464,7 @@ print(&quot;\n=== MEANDER DONE ===&quot;)</code></pre>
           Trained as a 2-model ensemble (seeds 42 &amp; 123) with label smoothing (0.01).
           Threshold tuned on validation set; 4-pass TTA at inference.
           Dataset: HandPD + Archive-3 spirals with 3&times; oversampling of handwriting samples.
-          Final test set: N=90, Accuracy 90.00%, F1=0.90.
+          Final test set: N=90, Accuracy 90.0%, F1=0.90.
         </div>
         <pre><code class="language-python" id="spiral-code">
 
@@ -949,14 +949,14 @@ print(&quot;\n=== SPIRAL ENSEMBLE DONE ===&quot;)
         <div class="code-meta">
           <div class="code-meta-title">Wave Model</div>
           <span class="code-meta-badge badge-keras">TensorFlow / Keras</span>
-          <span class="code-meta-badge badge-acc">Accuracy 93.33%</span>
+          <span class="code-meta-badge badge-acc">Accuracy 93.3%</span>
           <button class="copy-btn" onclick="copyCode('wave-code')">Copy</button>
         </div>
         <div class="code-desc">
           EfficientNetV2B0 with an augmented pipeline including RandomRotation, RandomZoom, RandomTranslation,
           RandomContrast, and RandomBrightness — broader than the spiral model due to wave drawing variability.
           Single model (seed 42), 4-pass TTA. Dataset: HandPD + Archive-3 wave with 3&times; oversampling; 90/10 split.
-          Final test set: N=90, Accuracy 93.33%.
+          Final test set: N=90, Accuracy 93.3%.
         </div>
         <pre><code class="language-python" id="wave-code">
 
@@ -1389,7 +1389,7 @@ print(&quot;\n=== WAVE DONE ===&quot;)
         <div class="code-meta">
           <div class="code-meta-title">Voice Models (AHH · Vowels · Text · 4-Class)</div>
           <span class="code-meta-badge badge-sklearn">scikit-learn / librosa</span>
-          <span class="code-meta-badge badge-acc">AHH AUC 0.967</span>
+          <span class="code-meta-badge badge-acc">AHH 90.9% · Vowels 79.5% · Text 86.7% · 4-Class 85.2%</span>
           <button class="copy-btn" onclick="copyCode('voice-code')">Copy</button>
         </div>
         <div class="code-desc">
