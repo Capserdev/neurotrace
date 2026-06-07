@@ -182,6 +182,7 @@
         <a href="stack.html"             class="nt-tab">STACK</a>
         <a href="onboarding.html"        class="nt-tab">HOW TO USE</a>
         <a href="credits.html"           class="nt-tab active">CREDITS</a>
+        <a href="code.html"              class="nt-tab">CODE</a>
       </nav>
 
       <div class="nt-nav-right">
@@ -605,6 +606,221 @@
             </li>
           </ul>
         </div>
+      </div>
+
+      <!-- ── References ───────────────────────────────────────────────────────── -->
+      <div class="cr-section-label">References</div>
+
+      <style>
+        .ref-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          background: var(--bg-card);
+          border: 1px solid var(--border);
+          border-radius: var(--r-lg);
+          overflow: hidden;
+          margin-bottom: 40px;
+        }
+        .ref-item {
+          display: grid;
+          grid-template-columns: 42px 1fr;
+          gap: 0;
+          border-bottom: 1px solid var(--border);
+        }
+        .ref-item:last-child { border-bottom: none; }
+        .ref-num {
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          padding: 14px 0 14px;
+          font-size: 11px;
+          font-weight: 700;
+          font-family: monospace;
+          color: var(--text-muted);
+          background: var(--bg-hover);
+          border-right: 1px solid var(--border);
+        }
+        .ref-body {
+          padding: 12px 16px;
+          font-size: 12.5px;
+          color: var(--text-secondary);
+          line-height: 1.65;
+        }
+        .ref-body a {
+          color: var(--accent);
+          text-decoration: none;
+          word-break: break-all;
+        }
+        .ref-body a:hover { text-decoration: underline; }
+        .ref-tag {
+          display: inline-block;
+          padding: 1px 7px;
+          border-radius: 4px;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: .04em;
+          text-transform: uppercase;
+          margin-left: 6px;
+          vertical-align: middle;
+        }
+        .tag-dataset  { background: rgba(245,158,11,.12); color: #f59e0b; border: 1px solid rgba(245,158,11,.3); }
+        .tag-paper    { background: rgba(99,102,241,.12);  color: #818cf8; border: 1px solid rgba(99,102,241,.3); }
+        .tag-media    { background: var(--bg-hover); color: var(--text-muted); border: 1px solid var(--border); }
+      </style>
+
+      <div class="ref-list">
+
+        <div class="ref-item">
+          <div class="ref-num">1</div>
+          <div class="ref-body">B. S. Olcay Kursun, "Parkinson's Speech with Multiple Types of Sound Recordings." UCI Machine Learning Repository, 2013. <span class="ref-tag tag-dataset">Dataset</span><br>
+          doi: <a href="https://doi.org/10.24432/C5NC8M" target="_blank">10.24432/C5NC8M</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">2</div>
+          <div class="ref-body">M. Little, "Parkinsons." UCI Machine Learning Repository, 2007. <span class="ref-tag tag-dataset">Dataset</span><br>
+          doi: <a href="https://doi.org/10.24432/C59C74" target="_blank">10.24432/C59C74</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">3</div>
+          <div class="ref-body">"Voice Samples for Patients with Parkinson's Disease and Healthy Controls." figshare, Aug. 04, 2023. <span class="ref-tag tag-dataset">Dataset</span><br>
+          doi: <a href="https://doi.org/10.6084/m9.figshare.23849127.v1" target="_blank">10.6084/m9.figshare.23849127.v1</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">4</div>
+          <div class="ref-body">BioStudies, "BioStudies &mdash; The European Bioinformatics Institute &mdash; EMBL-EBI." Accessed Dec. 02, 2025. <span class="ref-tag tag-dataset">Dataset</span><br>
+          <a href="https://www.ebi.ac.uk/biostudies/europepmc/studies/S-EPMC9613976" target="_blank">ebi.ac.uk/biostudies/europepmc/studies/S-EPMC9613976</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">5</div>
+          <div class="ref-body">M. Shen, P. Mortezaagha, and A. Rahgozar, "Explainable artificial intelligence to diagnose early Parkinson's disease via voice analysis," <em>Sci Rep</em>, vol. 15, no. 1, p. 11687, Apr. 2025. <span class="ref-tag tag-paper">Paper</span><br>
+          doi: <a href="https://doi.org/10.1038/s41598-025-96575-6" target="_blank">10.1038/s41598-025-96575-6</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">6</div>
+          <div class="ref-body">I. Luna-Ortiz et al., "Parkinson's Disease Detection from Voice Recordings Using Associative Memories," <em>Healthcare (Basel)</em>, vol. 11, no. 11, p. 1601, May 2023. <span class="ref-tag tag-paper">Paper</span><br>
+          doi: <a href="https://doi.org/10.3390/healthcare11111601" target="_blank">10.3390/healthcare11111601</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">7</div>
+          <div class="ref-body">P. Pradeep and J. Kamalakannan, "Automated detection of Parkinson's disease using improved linknet-ghostnet model based on handwriting images," <em>Sci Rep</em>, vol. 15, no. 1, p. 30731, Aug. 2025. <span class="ref-tag tag-paper">Paper</span><br>
+          doi: <a href="https://doi.org/10.1038/s41598-025-12636-w" target="_blank">10.1038/s41598-025-12636-w</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">8</div>
+          <div class="ref-body">S. Medasani, "Parkinson's Disease Detection Using Spiral Images (Hand Drawings)," vol. 1, Oct. 2023. <span class="ref-tag tag-dataset">Dataset</span><br>
+          doi: <a href="https://doi.org/10.17632/fd5wd6wmdj.1" target="_blank">10.17632/fd5wd6wmdj.1</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">9</div>
+          <div class="ref-body">B. S. M. Isenkul, "Parkinson Disease Spiral Drawings Using Digitized Graphics Tablet." UCI Machine Learning Repository, 2013. <span class="ref-tag tag-dataset">Dataset</span><br>
+          doi: <a href="https://doi.org/10.24432/C5Q01S" target="_blank">10.24432/C5Q01S</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">10</div>
+          <div class="ref-body">T. Perkins, "UA Researchers Seek New Applications for MRI Technology," <em>Azpm.org</em>, Sep. 2018. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://news.azpm.org/p/azpmnews/2018/9/18/137407-ua-researchers-seek-new-applications-for-mri-technology/" target="_blank">news.azpm.org</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">11</div>
+          <div class="ref-body">S. Prayaga, "Voice Design Strategies for the Elderly Population," <em>Digital Assistant Academy</em>, Feb. 23, 2021. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://medium.com/digital-assistant-academy/voice-design-strategies-for-the-elderly-population-17ea9c83859f" target="_blank">medium.com/digital-assistant-academy</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">12</div>
+          <div class="ref-body">ucheonuekwusil234, "Top 20 Best Incident Reporting Software for Healthcare," <em>vizajobs.com</em>, Sep. 19, 2024. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://vizajobs.com/top-20-best-incident-reporting-software-for-healthcare/" target="_blank">vizajobs.com</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">13</div>
+          <div class="ref-body">Freepik, "Close up senior man holding tablet," <em>Freepik</em>, 2021. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://www.freepik.com/free-photo/close-up-senior-man-holding-tablet_16623038.htm" target="_blank">freepik.com</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">14</div>
+          <div class="ref-body">E. Denslow, "Fine Motor Activities and Skills for Adults After Stroke," <em>Flint Rehab</em>, Nov. 09, 2021. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://www.flintrehab.com/fine-motor-skills-after-stroke/" target="_blank">flintrehab.com</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">15</div>
+          <div class="ref-body">"VVRMC Rural Health Clinic," <em>Vvrmc.org</em>, 2021. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://www.vvrmc.org/locations/vvrmc-rural-health-clinic/" target="_blank">vvrmc.org</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">16</div>
+          <div class="ref-body">"How to Hold a Successful Palliative Care Family Meeting," <em>crossroadshospice.com</em>. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://www.crossroadshospice.com/hospice-palliative-care-blog/2022/march/17/how-to-hold-a-successful-palliative-care-family-meeting/" target="_blank">crossroadshospice.com</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">17</div>
+          <div class="ref-body">B. Garcia, "What You Need to Know About Falls in the Elderly," <em>Pomona Valley Health Centers</em>, Sep. 24, 2020. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://mypvhc.com/what-you-need-to-know-about-falls-in-the-elderly/" target="_blank">mypvhc.com</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">18</div>
+          <div class="ref-body">S. Ktori, "Parkinson's Disease Brain Malfunction Evident in Scans Potentially Years Before Symptoms," <em>GEN &mdash; Genetic Engineering and Biotechnology News</em>, Jun. 20, 2019. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://www.genengnews.com/news/parkinsons-disease-brain-malfunction-evident-in-scans-potentially-years-before-symptoms/" target="_blank">genengnews.com</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">19</div>
+          <div class="ref-body">K. Gasnick, "Exercises and Types of Physical Therapy for Older Adults," <em>Verywell Health</em>, Aug. 18, 2021. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://www.verywellhealth.com/geriatric-physical-therapy-5189469" target="_blank">verywellhealth.com</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">20</div>
+          <div class="ref-body">D. Haynes, "Healthcare collaboration technology saves time for caregivers," <em>Samsung Business Insights</em>, Aug. 05, 2021. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://insights.samsung.com/2021/08/05/healthcare-collaboration-technology-saves-time-for-caregivers/" target="_blank">insights.samsung.com</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">21</div>
+          <div class="ref-body">ayeshatyagi, "Transforming rural health through lifestyle medicine," <em>American College of Lifestyle Medicine</em>, Oct. 08, 2025. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://lifestylemedicine.org/transforming-rural-health-through-lifestyle-medicine/" target="_blank">lifestylemedicine.org</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">22</div>
+          <div class="ref-body">Equal Access Carriers, Inc, "EAC Is Introducing a New AI-based Approach for the Early Diagnosis of Disease," <em>PR Newswire</em>, Jan. 09, 2023. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://www.prnewswire.com/news-releases/equal-access-carriers-inc-eac-is-introducing-a-new-ai-based-approach-for-the-early-diagnosis-of-disease-301716090.html" target="_blank">prnewswire.com</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">23</div>
+          <div class="ref-body">G. Public, "The need for global access to medicines for Parkinson's disease," <em>Speaking of Medicine and Health (PLOS)</em>, Mar. 11, 2025. <span class="ref-tag tag-media">Media</span><br>
+          <a href="https://speakingofmedicine.plos.org/2025/03/11/the-need-for-global-access-to-medicines-for-parkinsons-disease/" target="_blank">speakingofmedicine.plos.org</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">24</div>
+          <div class="ref-body">S. Aslam et al., "The future of Parkinson's care: a need to expand access," <em>Frontiers in Neurology</em>, vol. 16, Jun. 2025. <span class="ref-tag tag-paper">Paper</span><br>
+          doi: <a href="https://doi.org/10.3389/fneur.2025.1622283" target="_blank">10.3389/fneur.2025.1622283</a></div>
+        </div>
+
+        <div class="ref-item">
+          <div class="ref-num">25</div>
+          <div class="ref-body">M. Ramadhan, J. Stott, and A. Schrag, "The barriers to receiving health care for people with Parkinson's from predominantly Asian backgrounds in the UK," <em>npj Parkinson's Disease</em>, vol. 11, no. 1, May 2025. <span class="ref-tag tag-paper">Paper</span><br>
+          doi: <a href="https://doi.org/10.1038/s41531-025-00946-9" target="_blank">10.1038/s41531-025-00946-9</a></div>
+        </div>
+
       </div>
 
       <!-- ── Runtime summary ─────────────────────────────────────────────────── -->
