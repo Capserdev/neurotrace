@@ -1,0 +1,32 @@
+{
+  "ahh": {
+    "subject_accuracy": 0.7325102880658436,
+    "subject_accuracy_std": 0.02536795885995461,
+    "pd_recall": 0.6916666666666668,
+    "auc": 0.784959349593496,
+    "outer_repeats": 3,
+    "samples": 81,
+    "speakers": 81,
+    "pd_speakers": 40,
+    "hc_speakers": 41,
+    "best_params": {
+      "svc__C": 100.0,
+      "svc__gamma": 0.001
+    }
+  },
+  "text": {
+    "subject_accuracy": 0.7387387387387387,
+    "subject_accuracy_std": 0.033708625106071526,
+    "pd_recall": 0.6666666666666666,
+    "auc": 0.75,
+    "outer_repeats": 3,
+    "samples": 518,
+    "speakers": 37,
+    "pd_speakers": 16,
+    "hc_speakers": 21,
+    "best_params": {
+      "svc__C": 0.1,
+      "svc__gamma": 0.1
+    }
+  }
+}

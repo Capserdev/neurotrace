@@ -23,12 +23,45 @@ FEATURE_NAMES = [
 ]
 
 
+CHUNK_SECONDS = 10.0
+MIN_SECONDS = 1.0
+
+
+def load_sound(audio_path: str) -> "parselmouth.Sound":
+    """Load audio as a mono parselmouth Sound."""
+    snd = parselmouth.Sound(audio_path)
+    if snd.n_channels > 1:
+        snd = snd.convert_to_mono()
+    return snd
+
+
+def split_chunks(snd, chunk_s: float = CHUNK_SECONDS):
+    """Split a Sound into consecutive chunk_s windows.
+
+    A trailing piece shorter than half a chunk is merged into the previous
+    window so no chunk is too short for stable jitter/shimmer estimates.
+    """
+    dur = snd.get_total_duration()
+    if dur <= chunk_s * 1.5:
+        return [snd]
+    edges = list(np.arange(0.0, dur, chunk_s))
+    if dur - edges[-1] < chunk_s / 2:
+        edges.pop()
+    edges.append(dur)
+    return [snd.extract_part(from_time=a, to_time=b, preserve_times=False)
+            for a, b in zip(edges[:-1], edges[1:])]
+
+
 def extract_voice_features(audio_path: str) -> np.ndarray:
     """
     Extract 36 acoustic features from a .wav file.
     Returns a numpy array of shape (36,) matching model input order.
     """
-    snd = parselmouth.Sound(audio_path)
+    return extract_features_from_sound(load_sound(audio_path))
+
+
+def extract_features_from_sound(snd) -> np.ndarray:
+    """Extract the 36 features from an already-loaded parselmouth Sound."""
 
     # ── Pitch and pulses ─────────────────────────────────────────────────────
     pitch = call(snd, "To Pitch", 0.0, 75, 600)

@@ -12,3 +12,11 @@ venv/
 
 # macOS
 .DS_Store
+.pytest_cache/
+backend/web/
+backend/training/features_*.npz
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.*.local
